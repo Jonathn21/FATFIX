@@ -1,0 +1,183 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+
+const products = [
+  { name: "iPhone 16 Pro Max", grade: "A+", price: 899, oldPrice: 1299, img: "/images/devices/iphone-16-pro-max.webp", badge: "Best Seller", color: "Titane Naturel", storage: "256 Go", warranty: "12 mois" },
+  { name: "iPhone 16", grade: "A", price: 629, oldPrice: 969, img: "/images/devices/iphone-16.webp", badge: null, color: "Noir", storage: "128 Go", warranty: "12 mois" },
+  { name: "iPhone 17 Pro", grade: "A+", price: 979, oldPrice: 1399, img: "/images/devices/iphone-17-pro.webp", badge: "Nouveau", color: "Noir Sidéral", storage: "256 Go", warranty: "12 mois" },
+  { name: "Galaxy S26 Ultra", grade: "A", price: 849, oldPrice: 1299, img: "/images/devices/galaxy-s26-ultra.webp", badge: null, color: "Noir Fantôme", storage: "256 Go", warranty: "12 mois" },
+  { name: "Galaxy S26", grade: "A+", price: 599, oldPrice: 899, img: "/images/devices/galaxy-s26.webp", badge: "Petit prix", color: "Crème", storage: "128 Go", warranty: "12 mois" },
+  { name: "Galaxy S24", grade: "B+", price: 449, oldPrice: 799, img: "/images/devices/galaxy-s24.webp", badge: null, color: "Violet", storage: "128 Go", warranty: "12 mois" },
+  { name: "iPhone 17", grade: "A", price: 699, oldPrice: 1059, img: "/images/devices/iphone-17.webp", badge: null, color: "Blanc", storage: "128 Go", warranty: "12 mois" },
+  { name: "Galaxy S23 Ultra", grade: "B+", price: 399, oldPrice: 749, img: "/images/devices/galaxy-s23-ultra.webp", badge: "Prix choc", color: "Vert", storage: "256 Go", warranty: "12 mois" },
+];
+---
+
+<Layout title="Smartphones reconditionnés — Fatfix">
+  <Navbar client:load />
+
+  <!-- Hero -->
+  <section class="py-16 lg:py-20 bg-bg-alt">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div class="max-w-3xl" data-reveal>
+        <span class="badge badge-purple mb-4">Reconditionnés par Fatfix</span>
+        <h1 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
+          Smartphones reconditionnés,<br/>garantis 12 mois
+        </h1>
+        <p class="mt-5 text-text-muted text-lg max-w-2xl">
+          Reconditionnés par nos techniciens, testés sur 30 points de contrôle. Comme neufs, sans le prix du neuf.
+        </p>
+      </div>
+
+      <!-- Grades explained -->
+      <div data-reveal-children class="mt-10 grid sm:grid-cols-3 gap-4 max-w-2xl">
+        {[
+          { grade: "A+", desc: "Excellent état — aucune trace visible, batterie > 95%" },
+          { grade: "A", desc: "Très bon état — micro-rayures invisibles en usage, batterie > 90%" },
+          { grade: "B+", desc: "Bon état — légères traces d'usure, batterie > 85%" },
+        ].map((g) => (
+          <div class="flex items-start gap-3 bg-white rounded-xl p-4 border border-border">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 font-display font-bold text-primary text-xs flex-shrink-0">{g.grade}</span>
+            <span class="text-xs text-text-muted leading-relaxed">{g.desc}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust -->
+  <section class="bg-white border-b border-border">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8 py-5">
+      <div class="flex flex-wrap items-center justify-center gap-8 text-sm text-text-muted">
+        {[
+          { icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>`, text: "Garantie 12 mois" },
+          { icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25m-2.25 0h2.25"/>`, text: "Livraison gratuite" },
+          { icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182"/>`, text: "30 jours satisfait ou remboursé" },
+          { icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>`, text: "30 points de contrôle" },
+        ].map((item) => (
+          <span class="flex items-center gap-2">
+            <svg class="h-4 w-4 text-accent" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" set:html={item.icon} />
+            {item.text}
+          </span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Product grid -->
+  <section class="py-16">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div data-reveal-children class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {products.map((p) => (
+          <div class="card group overflow-hidden relative">
+            {p.badge && (
+              <span class={`absolute top-3 left-3 z-10 badge text-xs ${p.badge === "Best Seller" ? "badge-purple" : p.badge === "Nouveau" ? "bg-blue-50 text-blue-700 border-blue-200" : p.badge === "Prix choc" ? "bg-red-50 text-red-700 border-red-200" : "bg-amber-50 text-amber-700 border-amber-200"}`}>{p.badge}</span>
+            )}
+            <div class="aspect-square p-6 bg-bg-alt flex items-center justify-center">
+              <img src={p.img} alt={p.name} class="h-44 w-auto object-contain transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+            </div>
+            <div class="p-5">
+              <div class="flex items-center justify-between mb-1">
+                <h3 class="font-display font-bold text-sm">{p.name}</h3>
+                <span class="flex h-6 w-8 items-center justify-center rounded bg-primary/10 font-display font-bold text-primary text-xs">{p.grade}</span>
+              </div>
+              <div class="text-xs text-text-muted mb-3">
+                {p.color} · {p.storage}
+              </div>
+              <div class="flex items-baseline gap-2 mb-3">
+                <span class="font-display text-xl font-bold text-primary">{p.price} €</span>
+                <span class="text-sm text-text-muted line-through">{p.oldPrice} €</span>
+                <span class="text-xs font-semibold text-accent">-{Math.round((1 - p.price / p.oldPrice) * 100)}%</span>
+              </div>
+              <div class="flex items-center gap-1.5 text-xs text-text-muted mb-4">
+                <svg class="h-3.5 w-3.5 text-accent" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                Garantie {p.warranty}
+              </div>
+              <a href="/contact" class="block text-center rounded-full bg-primary hover:bg-primary-dark px-4 py-2.5 text-xs font-semibold text-white transition-colors">
+                Réserver
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="py-20 bg-bg-alt">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div class="text-center mb-14" data-reveal>
+        <h2 class="font-display text-2xl sm:text-3xl font-bold">Notre processus de reconditionnement</h2>
+      </div>
+      <div data-reveal-children class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        {[
+          { step: "1", title: "Réception", desc: "L'appareil est reçu et inspecté visuellement" },
+          { step: "2", title: "Diagnostic", desc: "Test complet de tous les composants (30 points)" },
+          { step: "3", title: "Réparation", desc: "Remplacement des pièces usées ou défectueuses" },
+          { step: "4", title: "Nettoyage", desc: "Nettoyage professionnel intérieur et extérieur" },
+          { step: "5", title: "Certification", desc: "Tests finaux, grade attribué, garantie activée" },
+        ].map((item) => (
+          <div class="card p-5 text-center relative">
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 flex h-7 w-7 items-center justify-center rounded-full bg-accent text-white font-display font-bold text-xs">{item.step}</div>
+            <h3 class="font-display text-sm font-bold mb-1 mt-3">{item.title}</h3>
+            <p class="text-xs text-text-muted">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison -->
+  <section class="py-20">
+    <div class="mx-auto max-w-4xl px-6 lg:px-8">
+      <div class="text-center mb-14" data-reveal>
+        <h2 class="font-display text-2xl sm:text-3xl font-bold">Reconditionné Fatfix vs neuf</h2>
+      </div>
+      <div data-reveal class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="bg-bg-alt">
+              <th class="text-left p-4 font-display font-semibold rounded-tl-xl"></th>
+              <th class="text-center p-4 font-display font-semibold">Fatfix Reconditionné</th>
+              <th class="text-center p-4 font-display font-semibold rounded-tr-xl">Neuf en magasin</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-border">
+            {[
+              { label: "Prix", fatfix: "Jusqu'à -50%", neuf: "Prix plein" },
+              { label: "Garantie", fatfix: "12 mois Fatfix", neuf: "24 mois constructeur" },
+              { label: "Batterie", fatfix: "> 85% de capacité", neuf: "100%" },
+              { label: "Pièces", fatfix: "D'origine ou certifiées", neuf: "D'origine" },
+              { label: "Tests qualité", fatfix: "30 points de contrôle", neuf: "Tests usine" },
+              { label: "Impact écologique", fatfix: "Réduit de 80%", neuf: "Empreinte complète" },
+              { label: "Retour", fatfix: "30 jours", neuf: "14 jours (légal)" },
+            ].map((row) => (
+              <tr>
+                <td class="p-4 font-medium text-text">{row.label}</td>
+                <td class="p-4 text-center text-accent font-medium">{row.fatfix}</td>
+                <td class="p-4 text-center text-text-muted">{row.neuf}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-16 bg-bg-dark text-white">
+    <div class="mx-auto max-w-3xl px-6 lg:px-8 text-center" data-reveal>
+      <h2 class="font-display text-2xl sm:text-3xl font-bold">Vous ne trouvez pas votre modèle ?</h2>
+      <p class="mt-4 text-white/60">Contactez-nous — nous avons souvent des modèles en stock non listés. Arrivages réguliers.</p>
+      <div class="mt-6 flex flex-wrap justify-center gap-4">
+        <a href="/contact" class="inline-flex items-center gap-2 rounded-full bg-primary hover:bg-primary-dark px-7 py-3.5 text-sm font-semibold text-white transition-colors">Nous contacter</a>
+        <a href="/boutiques" class="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/20 hover:bg-white/20 px-7 py-3.5 text-sm font-semibold text-white transition-all">Voir en boutique</a>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>

@@ -1,0 +1,379 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar";
+import DeviceGrid from "../components/DeviceGrid";
+import ReviewCarousel from "../components/ReviewCarousel";
+import FAQ from "../components/FAQ";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+---
+
+<Layout>
+  <Navbar client:load />
+
+  <!-- ═══════ HERO — GRADIENT TEAL → PURPLE ═══════ -->
+  <section class="relative overflow-hidden gradient-hero text-white">
+    <div class="relative mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+      <div class="grid lg:grid-cols-2 gap-10 items-center">
+        <div>
+          <h1 data-reveal class="font-display text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight leading-[1.1]">
+            Réparation iPhone &amp; Samsung à Bruxelles &amp; Liège
+          </h1>
+          <p data-reveal class="mt-5 text-lg text-white/80 max-w-lg leading-relaxed">
+            Pièces originales, prix transparents et généralement prêt en moins de 60 minutes.
+          </p>
+          <div data-reveal class="mt-8 flex flex-wrap gap-4">
+            <a href="/rdv" class="inline-flex items-center gap-2 rounded-full bg-primary hover:bg-primary-dark px-7 py-3.5 text-base font-semibold text-white transition-colors shadow-lg shadow-primary/30">
+              Prendre rendez-vous
+            </a>
+            <a href="/prix" class="inline-flex items-center gap-2 rounded-full bg-white/15 border border-white/30 hover:bg-white/25 backdrop-blur-sm px-7 py-3.5 text-base font-semibold text-white transition-all">
+              Voir les prix
+            </a>
+          </div>
+          <a data-reveal href="/envoi" class="mt-5 inline-flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors group">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+            Envoyer par la poste →
+          </a>
+        </div>
+        <div data-reveal class="relative hidden lg:flex items-center justify-center min-h-[360px]">
+          <!-- Main device in white frame -->
+          <div class="device-frame absolute z-20 -rotate-3" style="width:180px;height:320px;">
+            <img src="/images/devices/iphone-16.webp" alt="iPhone 16" class="h-full w-auto object-contain mx-auto" />
+          </div>
+          <!-- Second device tilted right -->
+          <div class="device-frame absolute z-10 left-[52%] top-[5%] rotate-3" style="width:160px;height:290px;">
+            <img src="/images/devices/galaxy-s26-ultra.webp" alt="Galaxy S26 Ultra" class="h-full w-auto object-contain mx-auto" />
+          </div>
+          <!-- MacBook behind -->
+          <div class="device-frame absolute z-0 right-0 bottom-0 rotate-2" style="width:240px;height:170px;">
+            <img src="/images/devices/macbook-air.webp" alt="MacBook Air" class="h-full w-auto object-contain mx-auto" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Wave separator -->
+    <div class="wave-separator">
+      <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1360,50 1440,40 L1440,80 L0,80 Z" fill="white"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ═══════ APPAREILS POPULAIRES ═══════ -->
+  <section class="py-16 lg:py-20">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div data-reveal class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
+        <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight">Appareils populaires</h2>
+        <a href="/reparations" class="text-sm font-semibold text-primary hover:underline inline-flex items-center gap-1.5">
+          Tous les modèles →
+        </a>
+      </div>
+      <div data-reveal-children class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        {[
+          { name: "iPhone 16", img: "/images/devices/iphone-16.webp", price: "79" },
+          { name: "iPhone 17 Pro", img: "/images/devices/iphone-17-pro.webp", price: "89" },
+          { name: "iPhone 16 Pro Max", img: "/images/devices/iphone-16-pro-max.webp", price: "89" },
+          { name: "iPhone 17", img: "/images/devices/iphone-17.webp", price: "79" },
+          { name: "Galaxy S26 Ultra", img: "/images/devices/galaxy-s26-ultra.webp", price: "89" },
+          { name: "Galaxy S26", img: "/images/devices/galaxy-s26.webp", price: "79" },
+          { name: "Galaxy S24", img: "/images/devices/galaxy-s24.webp", price: "69" },
+          { name: "iPad Pro", img: "/images/devices/ipad-pro.webp", price: "99" },
+          { name: "MacBook Air", img: "/images/devices/macbook-air.webp", price: "129" },
+          { name: "PS5", img: "/images/devices/ps5.webp", price: "49" },
+        ].map((d) => (
+          <a href="/prix" class="card group flex flex-col items-center p-5 text-center">
+            <div class="h-28 flex items-center justify-center mb-3">
+              <img src={d.img} alt={d.name} class="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-110" loading="lazy" />
+            </div>
+            <span class="font-display font-semibold text-sm text-text">{d.name}</span>
+            <span class="text-xs text-primary font-medium mt-1">à partir de € {d.price}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ QUE FAUT-IL RÉPARER ? ═══════ -->
+  <section class="py-16 lg:py-20 bg-bg-alt">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <h2 data-reveal class="font-display text-2xl sm:text-3xl font-bold text-center mb-6">Que faut-il réparer ?</h2>
+
+      <!-- Repair type pills -->
+      <div data-reveal class="flex flex-wrap justify-center gap-3 mb-12">
+        {[
+          { label: "Réparation d'écran", icon: `<rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>` },
+          { label: "Remplacement de la batterie", icon: `<rect x="6" y="7" width="12" height="10" rx="1"/><line x1="10" y1="7" x2="10" y2="4"/><line x1="14" y1="7" x2="14" y2="4"/>` },
+          { label: "Remplacement de la face arrière", icon: `<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M4 14h16"/>` },
+          { label: "Réparation dégât des eaux", icon: `<path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/>` },
+          { label: "Polissage de l'écran", icon: `<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>` },
+          { label: "Diagnostic", icon: `<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><path d="M8 11h6M11 8v6"/>` },
+        ].map((item) => (
+          <a href="/reparations" class="pill">
+            <svg class="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" set:html={item.icon} />
+            {item.label}
+          </a>
+        ))}
+      </div>
+
+      <!-- Device category grid -->
+      <div data-reveal-children class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        {[
+          { name: "iPhone", img: "/images/devices/iphone-16.webp" },
+          { name: "Samsung", img: "/images/devices/galaxy-s26-ultra.webp" },
+          { name: "iPad", img: "/images/devices/ipad-pro.webp" },
+          { name: "MacBook", img: "/images/devices/macbook-air.webp" },
+          { name: "Apple Watch", img: "/images/devices/apple-watch.webp" },
+          { name: "iMac", img: "/images/devices/imac.webp" },
+          { name: "Samsung Galaxy Tab", img: "/images/devices/galaxy-tab.webp" },
+          { name: "PlayStation", img: "/images/devices/ps5.webp" },
+          { name: "Google Pixel", img: "/images/devices/pixel-10-pro.webp" },
+          { name: "OnePlus", img: "/images/devices/oneplus-13.webp" },
+          { name: "Xbox", img: "/images/devices/xbox-series-x.webp" },
+          { name: "AirPods", img: "/images/devices/airpods-max.webp" },
+        ].map((cat) => (
+          <a href="/reparations" class="group rounded-2xl bg-white border border-border p-6 flex flex-col items-center text-center transition-all hover:shadow-lg hover:-translate-y-1">
+            <div class="h-24 sm:h-28 flex items-center justify-center mb-4">
+              <img src={cat.img} alt={cat.name} class="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-110" loading="lazy" />
+            </div>
+            <span class="font-display font-semibold text-sm text-text">{cat.name}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ DE VRAIS MAGASINS, DE VRAIS SPÉCIALISTES ═══════ -->
+  <section class="py-16 lg:py-20">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-10 items-center" data-reveal>
+        <div class="rounded-2xl overflow-hidden">
+          <img src="/images/media/store-front.jpg" alt="Boutique Fatfix" class="w-full h-full object-cover aspect-[4/3]" loading="lazy" />
+        </div>
+        <div>
+          <h2 class="font-display text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight">De vrais magasins, de vrais spécialistes</h2>
+          <p class="mt-4 text-text-muted leading-relaxed">
+            Passez sans rendez-vous ou réservez en ligne. La réparation se fait dans notre propre atelier, souvent pendant que vous attendez.
+          </p>
+          <ul class="mt-6 space-y-4">
+            {[
+              "Offre unique « glass-only » — remplacer uniquement la vitre, pas tout l'écran",
+              "Jusqu'à 1 an de garantie sur la plupart des réparations",
+              "Micro-soudure et récupération de données",
+              "Pièces d'origine ou certifiées constructeur",
+            ].map((item) => (
+              <li class="flex items-start gap-3">
+                <div class="flex h-6 w-6 items-center justify-center rounded-full bg-teal/10 flex-shrink-0 mt-0.5">
+                  <svg class="h-3.5 w-3.5 text-teal" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                </div>
+                <span class="text-sm text-text-light leading-relaxed">{item}</span>
+              </li>
+            ))}
+          </ul>
+          <a href="/a-propos" class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
+            En savoir plus sur nous →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ EN MAGASIN OU PAR LA POSTE ═══════ -->
+  <section class="py-16 lg:py-20 bg-bg-alt">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <h2 data-reveal class="font-display text-2xl sm:text-3xl font-bold text-center mb-4">
+        Passer en magasin ou envoyer par la poste ? Les deux sont possibles.
+      </h2>
+      <div data-reveal-children class="grid md:grid-cols-2 gap-6 mt-10">
+        <!-- En magasin -->
+        <div class="card overflow-hidden group">
+          <div class="aspect-video overflow-hidden">
+            <img src="/images/media/store-counter.jpg" alt="En magasin" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy"/>
+          </div>
+          <div class="p-7">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                <svg class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72"/></svg>
+              </div>
+              <h3 class="font-display text-xl font-bold">En magasin</h3>
+            </div>
+            <p class="text-text-muted text-sm leading-relaxed mb-4">Deux magasins : Bruxelles et Liège. Souvent prêt pendant que vous attendez.</p>
+            <a href="/rdv" class="inline-flex items-center gap-2 rounded-full bg-primary hover:bg-primary-dark px-5 py-2.5 text-sm font-semibold text-white transition-colors">Prendre rendez-vous</a>
+          </div>
+        </div>
+        <!-- Envoi postal -->
+        <div class="card overflow-hidden group">
+          <div class="aspect-video overflow-hidden">
+            <img src="/images/media/repair-closeup.jpg" alt="Envoi par la poste" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy"/>
+          </div>
+          <div class="p-7">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-teal/10">
+                <svg class="h-5 w-5 text-teal" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+              </div>
+              <h3 class="font-display text-xl font-bold">Envoi par la poste</h3>
+            </div>
+            <p class="text-text-muted text-sm leading-relaxed mb-4">Choisissez votre appareil et votre réparation, recevez une étiquette d'envoi par e-mail et postez votre colis quand cela vous convient.</p>
+            <a href="/envoi" class="inline-flex items-center gap-2 rounded-full border-2 border-border hover:border-primary px-5 py-2.5 text-sm font-semibold text-text hover:text-primary transition-all">
+              Comment ça marche →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ PLUTÔT VENDRE QUE RÉPARER ? ═══════ -->
+  <section class="py-10">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div data-reveal class="rounded-2xl bg-purple-50 border border-purple-100 p-8 lg:p-10 flex flex-col md:flex-row items-center gap-8">
+        <div class="flex items-center gap-3 flex-shrink-0">
+          <img src="/images/devices/iphone-17-pro-max.webp" alt="" class="h-32 object-contain -rotate-6" />
+          <img src="/images/devices/iphone-17.webp" alt="" class="h-36 object-contain rotate-3" />
+        </div>
+        <div class="flex-1">
+          <h3 class="font-display text-xl sm:text-2xl font-bold">Plutôt vendre que réparer ?</h3>
+          <p class="mt-2 text-text-muted text-sm">
+            Nous rachetons les iPhone — jusqu'à € 800, selon le modèle et l'état. Calculez votre offre en ligne.
+          </p>
+        </div>
+        <a href="/contact" class="flex-shrink-0 inline-flex items-center gap-2 rounded-full bg-primary hover:bg-primary-dark px-6 py-3 text-sm font-semibold text-white transition-colors whitespace-nowrap">
+          Calculer mon offre
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ NOS MAGASINS ═══════ -->
+  <section class="py-16 lg:py-20">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <h2 data-reveal class="font-display text-2xl sm:text-3xl font-bold text-center mb-10">Nos magasins</h2>
+      <div data-reveal-children class="grid md:grid-cols-2 gap-6">
+        {[
+          { name: "Fatfix Bruxelles", status: "Fermé", nextOpen: "lun 10:00", address: "Rue de la Réparation 42, 1000 Bruxelles", phone: "+32 400 00 00 01", img: "/images/media/store-front.jpg" },
+          { name: "Fatfix Liège", status: "Fermé", nextOpen: "lun 10:00", address: "Rue du Tech 15, 4000 Liège", phone: "+32 400 00 00 02", img: "/images/media/store-counter.jpg" },
+        ].map((store) => (
+          <div class="card overflow-hidden group">
+            <div class="aspect-video overflow-hidden relative">
+              <img src={store.img} alt={store.name} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy"/>
+              <div class="absolute top-3 right-3 flex items-center gap-2 bg-white/95 backdrop-blur rounded-full px-3 py-1.5 text-xs font-semibold">
+                <span class="h-2 w-2 rounded-full bg-red-500"></span>
+                {store.status} · {store.nextOpen}
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="font-display text-lg font-bold mb-2">{store.name}</h3>
+              <div class="space-y-1.5 text-sm text-text-muted mb-4">
+                <div class="flex items-center gap-2">
+                  <svg class="h-4 w-4 text-primary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+                  {store.address}
+                </div>
+                <div class="flex items-center gap-2">
+                  <svg class="h-4 w-4 text-primary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
+                  <a href={`tel:${store.phone.replace(/\s/g,"")}`} class="hover:text-primary transition-colors font-medium">{store.phone}</a>
+                </div>
+              </div>
+              <a href="/boutiques" class="inline-flex items-center gap-2 rounded-full border border-border hover:border-primary px-4 py-2 text-xs font-medium text-text-muted hover:text-primary transition-all">
+                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z"/></svg>
+                Itinéraire
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ REVIEWS ═══════ -->
+  <section class="py-16 lg:py-20 bg-bg-alt">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div data-reveal class="text-center mb-10">
+        <div class="font-display text-5xl sm:text-6xl font-bold tracking-tight">4,9 / 5</div>
+        <div class="flex items-center justify-center gap-1 mt-3">
+          {Array.from({length: 5}).map(() => (
+            <svg class="h-6 w-6 text-warning fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          ))}
+        </div>
+        <p class="mt-2 text-text-muted text-sm">
+          Basé sur 2 000+ avis
+          <svg class="inline h-4 w-4 ml-1" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        </p>
+        <a href="#" class="text-sm text-primary font-medium hover:underline mt-1 inline-block">Voir tous les avis</a>
+      </div>
+      <div data-reveal>
+        <ReviewCarousel client:visible />
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ RECONDITIONNÉS PROMO ═══════ -->
+  <section class="py-16 lg:py-20">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div data-reveal class="grid md:grid-cols-2 gap-10 items-center">
+        <div>
+          <span class="badge badge-purple mb-4">Nouveau</span>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold">Smartphones reconditionnés, garantis 12 mois</h2>
+          <p class="mt-4 text-text-muted leading-relaxed">
+            iPhones et Samsung reconditionnés par nos techniciens, testés sur 30 points de contrôle. Comme neufs, sans le prix du neuf.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href="/reconditionnes" class="inline-flex items-center gap-2 rounded-full bg-primary hover:bg-primary-dark px-6 py-3 text-sm font-semibold text-white transition-colors">
+              Voir les reconditionnés →
+            </a>
+          </div>
+        </div>
+        <div class="flex justify-center gap-6">
+          <img src="/images/devices/iphone-16.webp" alt="" class="h-44 object-contain drop-shadow-xl" loading="lazy" />
+          <img src="/images/devices/galaxy-s24.webp" alt="" class="h-40 object-contain mt-8 drop-shadow-lg" loading="lazy" />
+          <img src="/images/devices/iphone-17-pro.webp" alt="" class="h-44 object-contain drop-shadow-xl" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ FAQ ═══════ -->
+  <section class="py-16 lg:py-20 bg-bg-alt">
+    <div class="mx-auto max-w-3xl px-6 lg:px-8">
+      <h2 data-reveal class="font-display text-2xl sm:text-3xl font-bold text-center mb-10">Questions fréquentes</h2>
+      <div data-reveal>
+        <FAQ client:visible />
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ CTA GRADIENT CARD ═══════ -->
+  <section class="py-10">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div data-reveal class="gradient-cta rounded-3xl p-10 lg:p-14 text-center text-white">
+        <h2 class="font-display text-2xl sm:text-3xl font-bold">Comment souhaitez-vous déposer votre appareil ?</h2>
+        <div class="mt-8 flex flex-wrap justify-center gap-4">
+          <a href="/rdv" class="inline-flex items-center gap-2 rounded-full bg-white/20 border border-white/30 hover:bg-white/30 px-7 py-3.5 text-base font-semibold text-white transition-all backdrop-blur-sm">
+            Prendre rendez-vous
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ FINAL CTA — GRADIENT FULL WIDTH ═══════ -->
+  <section class="gradient-main py-16 lg:py-20 text-white">
+    <div class="mx-auto max-w-4xl px-6 lg:px-8 text-center">
+      <h2 data-reveal class="font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
+        Appareil cassé ? On s'en occupe.
+      </h2>
+      <p data-reveal class="mt-4 text-white/70 max-w-xl mx-auto">
+        Prenez rendez-vous ou envoyez votre appareil à l'un de nos magasins.
+      </p>
+      <div data-reveal class="mt-8 flex flex-wrap justify-center gap-4">
+        <a href="/rdv" class="inline-flex items-center gap-2 rounded-full bg-white text-primary hover:bg-white/90 px-7 py-3.5 text-base font-semibold transition-colors">
+          Prendre rendez-vous
+        </a>
+        <a href="/envoi" class="inline-flex items-center gap-2 rounded-full bg-white/15 border border-white/30 hover:bg-white/25 px-7 py-3.5 text-base font-semibold text-white transition-all">
+          Envoyez-le
+        </a>
+        <a href="tel:+32400000001" class="text-sm text-white/70 hover:text-white transition-colors self-center">ou appelez le</a>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>

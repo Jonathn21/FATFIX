@@ -1,0 +1,148 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+---
+
+<Layout title="À propos — Fatfix">
+  <Navbar client:load />
+
+  <!-- Hero -->
+  <section class="relative overflow-hidden bg-bg-dark text-white py-20 lg:py-28">
+    <div class="absolute inset-0">
+      <img src="/images/media/workshop.jpg" alt="" class="w-full h-full object-cover opacity-20" />
+      <div class="absolute inset-0 bg-gradient-to-b from-bg-dark/80 to-bg-dark"></div>
+    </div>
+    <div class="relative mx-auto max-w-7xl px-6 lg:px-8 text-center">
+      <h1 data-reveal class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
+        Passionnés de tech,<br/>experts de la réparation
+      </h1>
+      <p data-reveal class="mt-5 text-white/60 text-lg max-w-2xl mx-auto">
+        Depuis 2019, notre équipe de techniciens certifiés redonne vie à vos appareils. Rapidement, proprement, durablement.
+      </p>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="relative -mt-10 z-10 mx-auto max-w-4xl px-6 lg:px-8">
+    <div data-reveal-children class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {[
+        { value: "10 000+", label: "Appareils réparés" },
+        { value: "98%", label: "Clients satisfaits" },
+        { value: "15", label: "Techniciens" },
+        { value: "2", label: "Boutiques en Belgique" },
+      ].map((stat) => (
+        <div class="card p-6 text-center">
+          <span class="font-display text-2xl sm:text-3xl font-bold text-primary">{stat.value}</span>
+          <span class="block text-xs text-text-muted mt-1">{stat.label}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Story -->
+  <section class="py-20">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-14 items-center">
+        <div data-reveal>
+          <span class="badge badge-purple mb-4">Notre histoire</span>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold mb-6">De la passion à l'expertise</h2>
+          <div class="space-y-4 text-text-muted leading-relaxed">
+            <p>
+              Fatfix est né d'un constat simple : faire réparer son smartphone en Belgique était trop cher, trop lent, et trop opaque. En 2019, nous avons ouvert notre premier atelier à Bruxelles avec un objectif clair — offrir des réparations de qualité, rapides et à prix juste.
+            </p>
+            <p>
+              Aujourd'hui, avec deux boutiques et une quinzaine de techniciens, nous traitons plus de 10 000 appareils par an. Chaque pièce est testée, chaque intervention est garantie. Nous investissons continuellement dans la formation et les outils pour rester à la pointe : micro-soudure, diagnostic carte mère, réparation de composants CMS.
+            </p>
+            <p>
+              Notre philosophie n'a pas changé : transparence, rapidité, et un service client qui fait la différence.
+            </p>
+          </div>
+        </div>
+        <div data-reveal class="grid grid-cols-2 gap-4">
+          <img src="/images/media/store-front.jpg" alt="Boutique Fatfix" class="rounded-2xl w-full h-48 object-cover" loading="lazy" />
+          <img src="/images/media/micro-soldering.jpg" alt="Micro-soudure" class="rounded-2xl w-full h-48 object-cover mt-8" loading="lazy" />
+          <img src="/images/media/repair-closeup.jpg" alt="Réparation" class="rounded-2xl w-full h-48 object-cover" loading="lazy" />
+          <img src="/images/media/store-counter.jpg" alt="Comptoir" class="rounded-2xl w-full h-48 object-cover mt-8" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="py-20 bg-bg-alt">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div class="text-center mb-14" data-reveal>
+        <h2 class="font-display text-2xl sm:text-3xl font-bold">Ce qui nous guide</h2>
+      </div>
+      <div data-reveal-children class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[
+          { icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>`, title: "Transparence totale", desc: "Prix affichés, devis gratuit, pas de frais cachés. Vous savez exactement ce que vous payez avant toute intervention." },
+          { icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>`, title: "Rapidité", desc: "90% de nos réparations sont terminées en 60 minutes. Nous respectons votre temps." },
+          { icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/>`, title: "Excellence", desc: "Techniciens formés, pièces certifiées, tests avant et après. Chaque appareil sort de chez nous vérifié et garanti." },
+          { icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>`, title: "Proximité", desc: "Nous sommes accessibles, réactifs et à l'écoute. Nos boutiques sont des lieux accueillants, pas des dépôts de service." },
+          { icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0012 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 01-2.031.352 5.988 5.988 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 01-2.031.352 5.989 5.989 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971z"/>`, title: "Responsabilité", desc: "Réparer plutôt que jeter. Chaque appareil réparé, c'est un appareil de moins dans une décharge." },
+          { icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"/>`, title: "Formation continue", desc: "Nos techniciens suivent des formations chaque trimestre pour maîtriser les derniers modèles et techniques." },
+        ].map((item) => (
+          <div class="card p-7">
+            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 mb-4">
+              <svg class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" set:html={item.icon} />
+            </div>
+            <h3 class="font-display text-base font-bold mb-2">{item.title}</h3>
+            <p class="text-sm text-text-muted leading-relaxed">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Team photo break -->
+  <section class="relative h-64 lg:h-80 overflow-hidden">
+    <img src="/images/media/workshop.jpg" alt="L'atelier Fatfix" class="w-full h-full object-cover" />
+    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end">
+      <div class="mx-auto max-w-7xl px-6 lg:px-8 pb-8 w-full">
+        <p class="font-display text-white text-xl font-bold">Notre atelier — le cœur de Fatfix</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Certifications -->
+  <section class="py-20">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div class="text-center mb-14" data-reveal>
+        <h2 class="font-display text-2xl sm:text-3xl font-bold">Certifications &amp; partenaires</h2>
+        <p class="mt-3 text-text-muted">Des standards élevés, validés par les constructeurs.</p>
+      </div>
+      <div data-reveal-children class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[
+          { title: "Réparateur Agréé Apple", desc: "Pièces d'origine Apple, outils certifiés, procédures constructeur." },
+          { title: "Samsung Partenaire", desc: "Accès direct aux pièces Samsung d'origine pour Galaxy S et A." },
+          { title: "ISO 9001", desc: "Système de management qualité certifié pour nos processus de réparation." },
+          { title: "Eco-Réparateur", desc: "Label de réparation durable pour la réduction des déchets électroniques." },
+        ].map((cert) => (
+          <div class="card p-6 text-center">
+            <div class="flex h-14 w-14 mx-auto items-center justify-center rounded-2xl bg-accent/10 mb-4">
+              <svg class="h-7 w-7 text-accent" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.745 3.745 0 011.043 3.296A3.745 3.745 0 0121 12z"/></svg>
+            </div>
+            <h3 class="font-display text-sm font-bold mb-1">{cert.title}</h3>
+            <p class="text-xs text-text-muted leading-relaxed">{cert.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-16 bg-bg-alt">
+    <div class="mx-auto max-w-3xl px-6 lg:px-8 text-center" data-reveal>
+      <h2 class="font-display text-2xl sm:text-3xl font-bold">Envie de rejoindre l'équipe ?</h2>
+      <p class="mt-4 text-text-muted">Nous cherchons toujours des techniciens passionnés. Envoyez-nous votre CV.</p>
+      <a href="/contact" class="mt-6 inline-flex items-center gap-2 rounded-full bg-primary hover:bg-primary-dark px-7 py-3.5 text-sm font-semibold text-white transition-colors shadow-md">
+        Postuler
+      </a>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>

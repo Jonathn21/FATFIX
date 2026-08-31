@@ -1,0 +1,159 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+---
+
+<Layout title="Prendre rendez-vous | Fatfix">
+  <Navbar client:load />
+
+  <section class="py-16 lg:py-20">
+    <div class="mx-auto max-w-3xl px-6 lg:px-8">
+      <div class="text-center mb-14">
+        <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight">Prendre rendez-vous</h1>
+        <p class="mt-4 text-text-muted text-lg">
+          Réservez un créneau et soyez prioritaire à votre arrivée. Sans rendez-vous, c'est aussi possible.
+        </p>
+      </div>
+
+      <form class="card p-8 space-y-6" data-reveal>
+        <!-- Store selection -->
+        <div>
+          <label class="block text-sm font-medium text-text mb-2">Boutique</label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="relative cursor-pointer">
+              <input type="radio" name="store" value="bruxelles" class="peer sr-only" checked />
+              <div class="rounded-xl border-2 border-border peer-checked:border-primary peer-checked:bg-primary/5 p-4 text-center transition-all">
+                <span class="font-display font-semibold text-sm">Bruxelles</span>
+                <span class="block text-xs text-text-muted mt-1">Rue de la Réparation 42</span>
+              </div>
+            </label>
+            <label class="relative cursor-pointer">
+              <input type="radio" name="store" value="liege" class="peer sr-only" />
+              <div class="rounded-xl border-2 border-border peer-checked:border-primary peer-checked:bg-primary/5 p-4 text-center transition-all">
+                <span class="font-display font-semibold text-sm">Liège</span>
+                <span class="block text-xs text-text-muted mt-1">Rue du Tech 15</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Device type -->
+        <div>
+          <label for="device" class="block text-sm font-medium text-text mb-1.5">Appareil</label>
+          <select id="device" name="device" required
+            class="w-full rounded-xl border border-border px-4 py-3 text-sm text-text bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors">
+            <option value="">Sélectionnez votre appareil</option>
+            <optgroup label="iPhone">
+              <option>iPhone 17 Pro Max</option>
+              <option>iPhone 17 Pro</option>
+              <option>iPhone 17</option>
+              <option>iPhone 16 Pro Max</option>
+              <option>iPhone 16</option>
+              <option>iPhone 15 Pro</option>
+              <option>iPhone 15</option>
+              <option>iPhone 14 Pro</option>
+              <option>iPhone 14</option>
+              <option>iPhone 13</option>
+            </optgroup>
+            <optgroup label="Samsung">
+              <option>Galaxy S26 Ultra</option>
+              <option>Galaxy S26</option>
+              <option>Galaxy S24</option>
+              <option>Galaxy S23 Ultra</option>
+            </optgroup>
+            <optgroup label="iPad">
+              <option>iPad Pro 13" M5</option>
+              <option>iPad Pro 13" M4</option>
+            </optgroup>
+            <optgroup label="MacBook">
+              <option>MacBook Air M4</option>
+            </optgroup>
+            <optgroup label="Autre">
+              <option>Autre (précisez dans le message)</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <!-- Repair type -->
+        <div>
+          <label for="repair" class="block text-sm font-medium text-text mb-1.5">Type de réparation</label>
+          <select id="repair" name="repair" required
+            class="w-full rounded-xl border border-border px-4 py-3 text-sm text-text bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors">
+            <option value="">Sélectionnez la réparation</option>
+            <option>Écran (LCD complet)</option>
+            <option>Écran (verre seul)</option>
+            <option>Batterie</option>
+            <option>Vitre arrière</option>
+            <option>Dégât des eaux</option>
+            <option>Port de charge</option>
+            <option>Diagnostic</option>
+            <option>Autre</option>
+          </select>
+        </div>
+
+        <!-- Date & time -->
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label for="date" class="block text-sm font-medium text-text mb-1.5">Date souhaitée</label>
+            <input type="date" id="date" name="date" required
+              class="w-full rounded-xl border border-border px-4 py-3 text-sm text-text bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors" />
+          </div>
+          <div>
+            <label for="time" class="block text-sm font-medium text-text mb-1.5">Créneau horaire</label>
+            <select id="time" name="time" required
+              class="w-full rounded-xl border border-border px-4 py-3 text-sm text-text bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors">
+              <option value="">Choisissez</option>
+              <option>10:00 – 11:00</option>
+              <option>11:00 – 12:00</option>
+              <option>12:00 – 13:00</option>
+              <option>13:00 – 14:00</option>
+              <option>14:00 – 15:00</option>
+              <option>15:00 – 16:00</option>
+              <option>16:00 – 17:00</option>
+              <option>17:00 – 18:00</option>
+              <option>18:00 – 19:00</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Contact details -->
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label for="name" class="block text-sm font-medium text-text mb-1.5">Nom complet</label>
+            <input type="text" id="name" name="name" placeholder="Votre nom" required
+              class="w-full rounded-xl border border-border px-4 py-3 text-sm text-text bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors" />
+          </div>
+          <div>
+            <label for="phone" class="block text-sm font-medium text-text mb-1.5">Téléphone</label>
+            <input type="tel" id="phone" name="phone" placeholder="+32 ..." required
+              class="w-full rounded-xl border border-border px-4 py-3 text-sm text-text bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors" />
+          </div>
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-medium text-text mb-1.5">E-mail</label>
+          <input type="email" id="email" name="email" placeholder="votre@email.com" required
+            class="w-full rounded-xl border border-border px-4 py-3 text-sm text-text bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors" />
+        </div>
+
+        <div>
+          <label for="notes" class="block text-sm font-medium text-text mb-1.5">Remarques (optionnel)</label>
+          <textarea id="notes" name="notes" rows="3" placeholder="Description du problème, modèle exact..."
+            class="w-full rounded-xl border border-border px-4 py-3 text-sm text-text bg-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors resize-none"></textarea>
+        </div>
+
+        <button type="submit" class="w-full rounded-full bg-primary hover:bg-primary-dark px-6 py-3.5 text-base font-semibold text-white transition-colors shadow-sm">
+          Confirmer le rendez-vous
+        </button>
+
+        <p class="text-xs text-text-muted text-center">
+          Vous pouvez aussi passer sans rendez-vous pendant nos heures d'ouverture.
+        </p>
+      </form>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>

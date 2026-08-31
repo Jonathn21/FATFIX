@@ -1,0 +1,89 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+---
+
+<Layout title="Envoi postal — Faites réparer à distance | Fatfix">
+  <Navbar client:load />
+
+  <section class="py-16 lg:py-20">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div class="max-w-2xl mx-auto text-center mb-16">
+        <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-tight">Envoyez votre appareil par la poste</h1>
+        <p class="mt-4 text-text-muted text-lg">
+          Pas de boutique près de chez vous ? Choisissez votre réparation, recevez un label, envoyez votre appareil. On s'occupe du reste.
+        </p>
+      </div>
+
+      <!-- Steps -->
+      <div class="grid md:grid-cols-3 gap-8 mb-20" data-reveal-children>
+        {[
+          {
+            step: "1",
+            title: "Choisissez votre réparation",
+            desc: "Sélectionnez votre appareil et le type de panne. Le prix et le délai s'affichent immédiatement.",
+            icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59"/>`,
+          },
+          {
+            step: "2",
+            title: "Envoyez votre appareil",
+            desc: "Vous recevez une étiquette prépayée par e-mail. Emballez votre appareil et déposez-le au bureau de poste.",
+            icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>`,
+          },
+          {
+            step: "3",
+            title: "Récupérez-le réparé",
+            desc: "Nous réparons votre appareil sous 3 à 5 jours ouvrés et vous le renvoyons par la poste, garanti.",
+            icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.745 3.745 0 011.043 3.296A3.745 3.745 0 0121 12z"/>`,
+          },
+        ].map((item) => (
+          <div class="card p-8 text-center">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white font-display font-bold text-sm mx-auto mb-5">
+              {item.step}
+            </div>
+            <div class="flex h-14 w-14 mx-auto items-center justify-center rounded-2xl bg-primary/10 mb-5">
+              <svg class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" set:html={item.icon} />
+            </div>
+            <h3 class="font-display text-lg font-bold mb-2">{item.title}</h3>
+            <p class="text-sm text-text-muted leading-relaxed">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <!-- Details -->
+      <div class="grid md:grid-cols-2 gap-12 items-center" data-reveal>
+        <div>
+          <img src="/images/media/micro-soldering.jpg" alt="Réparation en atelier" class="rounded-2xl w-full object-cover" loading="lazy" />
+        </div>
+        <div>
+          <h2 class="font-display text-2xl font-bold mb-6">Ce qu'il faut savoir</h2>
+          <div class="space-y-4">
+            {[
+              { q: "Combien ça coûte ?", a: "Le même prix qu'en boutique. Pas de frais d'envoi supplémentaires — l'étiquette prépayée est incluse." },
+              { q: "Quel est le délai ?", a: "Comptez 3 à 5 jours ouvrés depuis la réception de votre appareil. Nous vous tenons informé par e-mail à chaque étape." },
+              { q: "Comment emballer ?", a: "Utilisez un emballage rigide (boîte en carton). Enveloppez l'appareil dans du papier bulle. Pas besoin d'accessoires (chargeur, câble, écouteurs)." },
+              { q: "Et la garantie ?", a: "La même qu'en boutique : jusqu'à 1 an selon la réparation. En cas de souci, renvoyez-le-nous gratuitement." },
+            ].map((item) => (
+              <div class="border-b border-border pb-4">
+                <h4 class="font-display font-semibold text-sm mb-1">{item.q}</h4>
+                <p class="text-sm text-text-muted leading-relaxed">{item.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="mt-16 text-center" data-reveal>
+        <a href="/prix" class="inline-flex items-center gap-2 rounded-full bg-primary hover:bg-primary-dark px-8 py-4 text-base font-semibold text-white transition-colors shadow-md">
+          Choisir ma réparation
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>
