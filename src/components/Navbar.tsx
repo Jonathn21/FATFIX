@@ -77,7 +77,7 @@ export default function Navbar() {
       >
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 lg:px-8">
           <a href="/" className="font-display text-2xl font-bold tracking-tight select-none text-text">
-            fat<span className="text-primary">fix</span>
+            fast<span className="text-primary">fix</span>
           </a>
 
           <ul className="hidden lg:flex items-center gap-6">
