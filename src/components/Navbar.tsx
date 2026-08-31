@@ -27,7 +27,7 @@ export default function Navbar() {
   return (
     <>
       {/* Trust bar — scrolling marquee style */}
-      <div className="gradient-main-soft text-white text-xs py-2 hidden md:block">
+      <div className="bg-bg-dark text-white text-xs py-2 hidden md:block">
         <div className="mx-auto max-w-7xl px-6 flex items-center justify-between">
           <div className="flex items-center gap-5 flex-wrap">
             {/* Google rating */}

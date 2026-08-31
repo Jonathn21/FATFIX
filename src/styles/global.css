@@ -5,21 +5,21 @@
   --font-sans: "Inter", system-ui, sans-serif;
 
   --color-bg: #FFFFFF;
-  --color-bg-alt: #F8FAFC;
-  --color-bg-dark: #1B1033;
+  --color-bg-alt: #F4F7F5;
+  --color-bg-dark: #0A0A0A;
   --color-surface: #FFFFFF;
-  --color-primary: #7C3AED;
-  --color-primary-light: #8B5CF6;
-  --color-primary-dark: #6D28D9;
-  --color-teal: #0D9488;
-  --color-teal-light: #14B8A6;
-  --color-cyan: #06B6D4;
-  --color-accent: #10B981;
-  --color-accent-light: #34D399;
+  --color-primary: #10B981;
+  --color-primary-light: #34D399;
+  --color-primary-dark: #059669;
+  --color-teal: #059669;
+  --color-teal-light: #6EE7B7;
+  --color-cyan: #06D6A0;
+  --color-accent: #06D6A0;
+  --color-accent-light: #6EE7B7;
   --color-warning: #F59E0B;
   --color-danger: #EF4444;
-  --color-text: #1A1A2E;
-  --color-text-light: #4B5563;
+  --color-text: #111111;
+  --color-text-light: #374151;
   --color-text-muted: #6B7280;
   --color-border: #E5E7EB;
   --color-border-dark: #D1D5DB;
@@ -45,31 +45,31 @@ body {
 
 /* ── Gradient text ── */
 .gradient-text {
-  background: linear-gradient(135deg, var(--color-primary), #A855F7);
+  background: linear-gradient(135deg, var(--color-primary), #06D6A0);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* ── Teal-to-purple gradient ── */
+/* ── Noir & Émeraude gradients ── */
 .gradient-main {
-  background: linear-gradient(135deg, #0D9488 0%, #7C3AED 60%, #9333EA 100%);
+  background: linear-gradient(135deg, #0A0A0A 0%, #064E3B 50%, #10B981 100%);
 }
 
 .gradient-main-soft {
-  background: linear-gradient(135deg, #0D9488 0%, #6D28D9 100%);
+  background: linear-gradient(135deg, #111111 0%, #065F46 100%);
 }
 
 .gradient-hero {
-  background: linear-gradient(135deg, #0D9488 0%, #7C3AED 55%, #A855F7 100%);
+  background: linear-gradient(135deg, #0A0A0A 0%, #064E3B 45%, #10B981 100%);
 }
 
 .gradient-footer {
-  background: linear-gradient(135deg, #0D9488 0%, #5B21B6 70%, #7C3AED 100%);
+  background: linear-gradient(135deg, #0A0A0A 0%, #052E1F 60%, #064E3B 100%);
 }
 
 .gradient-cta {
-  background: linear-gradient(135deg, #14B8A6 0%, #7C3AED 100%);
+  background: linear-gradient(135deg, #064E3B 0%, #10B981 100%);
 }
 
 /* ── Card styles ── */
@@ -80,7 +80,7 @@ body {
   transition: box-shadow 0.3s, transform 0.3s;
 }
 .card:hover {
-  box-shadow: 0 10px 40px rgba(124, 58, 237, 0.08), 0 2px 8px rgba(0,0,0,0.04);
+  box-shadow: 0 10px 40px rgba(16, 185, 129, 0.10), 0 2px 8px rgba(0,0,0,0.04);
   transform: translateY(-2px);
 }
 
@@ -110,8 +110,8 @@ body {
   color: #059669;
 }
 .badge-purple {
-  background: #F3E8FF;
-  color: #7C3AED;
+  background: #ECFDF5;
+  color: #059669;
 }
 
 /* ── Pill button ── */
@@ -132,7 +132,7 @@ body {
 .pill:hover {
   border-color: var(--color-primary);
   color: var(--color-primary);
-  box-shadow: 0 2px 12px rgba(124, 58, 237, 0.12);
+  box-shadow: 0 2px 12px rgba(16, 185, 129, 0.15);
 }
 
 /* ── Wave separator ── */
@@ -203,7 +203,7 @@ body {
   background: var(--color-primary);
   color: white;
   border-color: var(--color-primary);
-  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
 }
 
 /* ── Floating orb animations ── */
@@ -231,15 +231,15 @@ body {
   filter: blur(60px);
 }
 .orb-purple {
-  background: radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.10) 0%, transparent 70%);
   animation: float-slow 20s ease-in-out infinite;
 }
 .orb-teal {
-  background: radial-gradient(circle, rgba(13, 148, 136, 0.10) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(5, 150, 105, 0.10) 0%, transparent 70%);
   animation: float-slow-reverse 25s ease-in-out infinite;
 }
 .orb-accent {
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(6, 214, 160, 0.08) 0%, transparent 70%);
   animation: float-slow 22s ease-in-out infinite;
 }
 
