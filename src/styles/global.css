@@ -206,6 +206,43 @@ body {
   box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3);
 }
 
+/* ── Floating orb animations ── */
+@keyframes float-slow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(30px, -20px) scale(1.05); }
+  50% { transform: translate(-10px, 15px) scale(0.95); }
+  75% { transform: translate(-25px, -10px) scale(1.02); }
+}
+@keyframes float-slow-reverse {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(-20px, 15px) scale(0.97); }
+  50% { transform: translate(15px, -25px) scale(1.04); }
+  75% { transform: translate(10px, 20px) scale(0.98); }
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(60px);
+}
+.orb-purple {
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, transparent 70%);
+  animation: float-slow 20s ease-in-out infinite;
+}
+.orb-teal {
+  background: radial-gradient(circle, rgba(13, 148, 136, 0.10) 0%, transparent 70%);
+  animation: float-slow-reverse 25s ease-in-out infinite;
+}
+.orb-accent {
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+  animation: float-slow 22s ease-in-out infinite;
+}
+
 /* ── Horizontal scroll container ── */
 .scroll-x {
   display: flex;

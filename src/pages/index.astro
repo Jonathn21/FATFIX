@@ -13,6 +13,10 @@ import "../styles/global.css";
 
   <!-- ═══════ HERO — GRADIENT TEAL → PURPLE ═══════ -->
   <section class="relative overflow-hidden gradient-hero text-white">
+    <!-- Background image overlay -->
+    <div class="absolute inset-0">
+      <img src="/images/media/workshop.jpg" alt="" class="w-full h-full object-cover opacity-10 mix-blend-overlay" />
+    </div>
     <div class="relative mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
       <div class="grid lg:grid-cols-2 gap-10 items-center">
         <div>
@@ -35,19 +39,8 @@ import "../styles/global.css";
             Envoyer par la poste →
           </a>
         </div>
-        <div data-reveal class="relative hidden lg:flex items-center justify-center min-h-[360px]">
-          <!-- Main device in white frame -->
-          <div class="device-frame absolute z-20 -rotate-3" style="width:180px;height:320px;">
-            <img src="/images/devices/iphone-16.webp" alt="iPhone 16" class="h-full w-auto object-contain mx-auto" />
-          </div>
-          <!-- Second device tilted right -->
-          <div class="device-frame absolute z-10 left-[52%] top-[5%] rotate-3" style="width:160px;height:290px;">
-            <img src="/images/devices/galaxy-s26-ultra.webp" alt="Galaxy S26 Ultra" class="h-full w-auto object-contain mx-auto" />
-          </div>
-          <!-- MacBook behind -->
-          <div class="device-frame absolute z-0 right-0 bottom-0 rotate-2" style="width:240px;height:170px;">
-            <img src="/images/devices/macbook-air.webp" alt="MacBook Air" class="h-full w-auto object-contain mx-auto" />
-          </div>
+        <div data-reveal class="relative hidden lg:flex items-center justify-center">
+          <img src="/images/media/hero-devices.png" alt="iPhone, Samsung, MacBook, iPad, PS5, Xbox et outils de réparation Fatfix" class="w-full max-w-xl object-contain drop-shadow-2xl" />
         </div>
       </div>
     </div>
@@ -60,8 +53,11 @@ import "../styles/global.css";
   </section>
 
   <!-- ═══════ APPAREILS POPULAIRES ═══════ -->
-  <section class="py-16 lg:py-20">
-    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+  <section class="py-16 lg:py-20 relative overflow-hidden">
+    <!-- Floating orbs -->
+    <div class="orb orb-purple" style="width:400px;height:400px;top:-100px;right:-150px;"></div>
+    <div class="orb orb-teal" style="width:300px;height:300px;bottom:-80px;left:-100px;"></div>
+    <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
       <div data-reveal class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
         <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight">Appareils populaires</h2>
         <a href="/reparations" class="text-sm font-semibold text-primary hover:underline inline-flex items-center gap-1.5">
@@ -143,8 +139,10 @@ import "../styles/global.css";
   </section>
 
   <!-- ═══════ DE VRAIS MAGASINS, DE VRAIS SPÉCIALISTES ═══════ -->
-  <section class="py-16 lg:py-20">
-    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+  <section class="py-16 lg:py-20 relative overflow-hidden">
+    <div class="orb orb-teal" style="width:350px;height:350px;top:50px;left:-120px;"></div>
+    <div class="orb orb-accent" style="width:250px;height:250px;bottom:30px;right:-80px;"></div>
+    <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
       <div class="grid lg:grid-cols-2 gap-10 items-center" data-reveal>
         <div class="rounded-2xl overflow-hidden">
           <img src="/images/media/store-front.jpg" alt="Boutique Fatfix" class="w-full h-full object-cover aspect-[4/3]" loading="lazy" />
@@ -244,8 +242,9 @@ import "../styles/global.css";
   </section>
 
   <!-- ═══════ NOS MAGASINS ═══════ -->
-  <section class="py-16 lg:py-20">
-    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+  <section class="py-16 lg:py-20 relative overflow-hidden">
+    <div class="orb orb-purple" style="width:300px;height:300px;top:-60px;left:30%;"></div>
+    <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
       <h2 data-reveal class="font-display text-2xl sm:text-3xl font-bold text-center mb-10">Nos magasins</h2>
       <div data-reveal-children class="grid md:grid-cols-2 gap-6">
         {[
@@ -306,8 +305,10 @@ import "../styles/global.css";
   </section>
 
   <!-- ═══════ RECONDITIONNÉS PROMO ═══════ -->
-  <section class="py-16 lg:py-20">
-    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+  <section class="py-16 lg:py-20 relative overflow-hidden">
+    <div class="orb orb-accent" style="width:350px;height:350px;top:-50px;right:-100px;"></div>
+    <div class="orb orb-purple" style="width:280px;height:280px;bottom:-60px;left:-80px;"></div>
+    <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
       <div data-reveal class="grid md:grid-cols-2 gap-10 items-center">
         <div>
           <span class="badge badge-purple mb-4">Nouveau</span>
@@ -355,8 +356,11 @@ import "../styles/global.css";
   </section>
 
   <!-- ═══════ FINAL CTA — GRADIENT FULL WIDTH ═══════ -->
-  <section class="gradient-main py-16 lg:py-20 text-white">
-    <div class="mx-auto max-w-4xl px-6 lg:px-8 text-center">
+  <section class="relative gradient-main py-16 lg:py-20 text-white overflow-hidden">
+    <div class="absolute inset-0">
+      <img src="/images/media/micro-soldering.jpg" alt="" class="w-full h-full object-cover opacity-10 mix-blend-overlay" />
+    </div>
+    <div class="relative mx-auto max-w-4xl px-6 lg:px-8 text-center">
       <h2 data-reveal class="font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
         Appareil cassé ? On s'en occupe.
       </h2>
