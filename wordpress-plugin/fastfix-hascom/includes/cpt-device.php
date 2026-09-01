@@ -59,9 +59,10 @@ add_filter( 'manage_fastfix_device_posts_columns', function( $columns ) {
 	$new['fastfix_thumb']   = 'Photo';
 	$new['title']           = 'Modèle';
 	$new['fastfix_brand']   = 'Marque';
-	$new['fastfix_type']    = 'Type';
-	$new['fastfix_numbers'] = 'Numéros de modèle';
-	$new['date']            = $columns['date'];
+	$new['fastfix_type']     = 'Type';
+	$new['fastfix_numbers']  = 'Numéros de modèle';
+	$new['fastfix_featured'] = 'Page d\'accueil';
+	$new['date']             = $columns['date'];
 	return $new;
 } );
 
@@ -83,6 +84,14 @@ add_action( 'manage_fastfix_device_posts_custom_column', function( $column, $pos
 			break;
 		case 'fastfix_numbers':
 			echo esc_html( get_post_meta( $post_id, '_fastfix_model_numbers', true ) );
+			break;
+		case 'fastfix_featured':
+			if ( get_post_meta( $post_id, '_fastfix_featured', true ) === '1' ) {
+				$price = get_post_meta( $post_id, '_fastfix_starting_price', true );
+				echo '<span style="color:#16A34A;font-weight:600;">★ Populaire</span>' . ( $price !== '' ? ' (' . esc_html( $price ) . ' €)' : '' );
+			} else {
+				echo '<span style="color:#888;">—</span>';
+			}
 			break;
 	}
 }, 10, 2 );
@@ -118,9 +127,11 @@ add_action( 'add_meta_boxes', function() {
 function fastfix_render_device_meta_box( $post ) {
 	wp_nonce_field( 'fastfix_save_device', 'fastfix_device_nonce' );
 
-	$device_type   = get_post_meta( $post->ID, '_fastfix_device_type', true ) ?: 'iphone';
-	$model_numbers = get_post_meta( $post->ID, '_fastfix_model_numbers', true );
-	$choices       = fastfix_device_type_choices();
+	$device_type    = get_post_meta( $post->ID, '_fastfix_device_type', true ) ?: 'iphone';
+	$model_numbers  = get_post_meta( $post->ID, '_fastfix_model_numbers', true );
+	$featured       = get_post_meta( $post->ID, '_fastfix_featured', true );
+	$starting_price = get_post_meta( $post->ID, '_fastfix_starting_price', true );
+	$choices        = fastfix_device_type_choices();
 	unset( $choices['default'] );
 	?>
 	<p>
@@ -136,9 +147,21 @@ function fastfix_render_device_meta_box( $post ) {
 		<label for="fastfix_model_numbers"><strong>Numéros de modèle</strong></label><br>
 		<input type="text" name="fastfix_model_numbers" id="fastfix_model_numbers" value="<?php echo esc_attr( $model_numbers ); ?>" style="width:100%;max-width:400px;" placeholder="ex: A3526, A3527" />
 	</p>
+	<hr>
+	<p>
+		<label>
+			<input type="checkbox" name="fastfix_featured" value="1" <?php checked( $featured, '1' ); ?> />
+			<strong>Appareil populaire</strong> — l'afficher dans la section "Appareils populaires" de la page d'accueil
+		</label>
+	</p>
+	<p>
+		<label for="fastfix_starting_price"><strong>Prix affiché sur la page d'accueil</strong> (€, "à partir de")</label><br>
+		<input type="number" step="1" min="0" name="fastfix_starting_price" id="fastfix_starting_price" value="<?php echo esc_attr( $starting_price ); ?>" style="width:100%;max-width:150px;" placeholder="ex: 79" />
+	</p>
 	<p class="description">
 		Ajoutez la <strong>photo</strong> de l'appareil via le module "Image mise en avant" dans la colonne de droite.
-		Le champ <strong>Ordre</strong> (module "Attributs") contrôle l'ordre d'affichage dans la liste des modèles.
+		Le champ <strong>Ordre</strong> (module "Attributs") contrôle l'ordre d'affichage dans la liste des modèles
+		et dans la section "Appareils populaires".
 	</p>
 	<?php
 }
@@ -155,6 +178,10 @@ add_action( 'save_post_fastfix_device', function( $post_id ) {
 	}
 	if ( isset( $_POST['fastfix_model_numbers'] ) ) {
 		update_post_meta( $post_id, '_fastfix_model_numbers', sanitize_text_field( $_POST['fastfix_model_numbers'] ) );
+	}
+	update_post_meta( $post_id, '_fastfix_featured', isset( $_POST['fastfix_featured'] ) ? '1' : '' );
+	if ( isset( $_POST['fastfix_starting_price'] ) ) {
+		update_post_meta( $post_id, '_fastfix_starting_price', sanitize_text_field( $_POST['fastfix_starting_price'] ) );
 	}
 } );
 
@@ -216,6 +243,20 @@ function fastfix_seed_default_devices() {
 		],
 	];
 
+	// Modèles à marquer "populaire" pour la section "Appareils populaires" de
+	// la page d'accueil, avec le prix affiché ("à partir de").
+	$featured = [
+		'iPhone 16'          => 79,
+		'iPhone 17 Pro'      => 89,
+		'iPhone 16 Pro Max'  => 89,
+		'iPhone 17'          => 79,
+		'Galaxy S26 Ultra'   => 89,
+		'Galaxy S26'         => 79,
+		'Galaxy S24'         => 69,
+		'iPad Pro 13" M5'    => 99,
+		'MacBook Air 15" M4' => 129,
+	];
+
 	$order = 0;
 	foreach ( $seed as $device_type => $models ) {
 		foreach ( $models as [ $name, $numbers ] ) {
@@ -230,6 +271,48 @@ function fastfix_seed_default_devices() {
 			update_post_meta( $post_id, '_fastfix_device_type', $device_type );
 			update_post_meta( $post_id, '_fastfix_brand', fastfix_brand_for_device_type( $device_type ) );
 			update_post_meta( $post_id, '_fastfix_model_numbers', $numbers );
+
+			if ( isset( $featured[ $name ] ) ) {
+				update_post_meta( $post_id, '_fastfix_featured', '1' );
+				update_post_meta( $post_id, '_fastfix_starting_price', $featured[ $name ] );
+			}
+		}
+	}
+}
+
+/**
+ * Marque comme "populaire" les modèles déjà existants qui correspondent à
+ * l'ancienne liste codée en dur de la page d'accueil — utile quand les
+ * appareils ont été seedés AVANT l'ajout du champ "populaire" (donc que
+ * fastfix_seed_default_devices() ne s'exécutera plus, ses posts existant déjà).
+ * Ne modifie jamais un appareil déjà marqué manuellement dans wp-admin.
+ */
+function fastfix_seed_featured_devices() {
+	$featured = [
+		'iPhone 16'          => 79,
+		'iPhone 17 Pro'      => 89,
+		'iPhone 16 Pro Max'  => 89,
+		'iPhone 17'          => 79,
+		'Galaxy S26 Ultra'   => 89,
+		'Galaxy S26'         => 79,
+		'Galaxy S24'         => 69,
+		'iPad Pro 13" M5'    => 99,
+		'MacBook Air 15" M4' => 129,
+	];
+
+	foreach ( $featured as $name => $price ) {
+		$posts = get_posts( [
+			'post_type'      => 'fastfix_device',
+			'title'          => $name,
+			'posts_per_page' => 1,
+			'post_status'    => 'any',
+		] );
+		if ( empty( $posts ) ) continue;
+
+		$post_id = $posts[0]->ID;
+		if ( get_post_meta( $post_id, '_fastfix_featured', true ) === '' ) {
+			update_post_meta( $post_id, '_fastfix_featured', '1' );
+			update_post_meta( $post_id, '_fastfix_starting_price', $price );
 		}
 	}
 }

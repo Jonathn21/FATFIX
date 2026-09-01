@@ -89,7 +89,7 @@ body {
   transition: box-shadow 0.3s, transform 0.3s;
 }
 .card:hover {
-  box-shadow: 0 10px 40px rgba(212, 160, 23, 0.10), 0 2px 8px rgba(0,0,0,0.04);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
   transform: translateY(-2px);
 }
 

@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import Navbar from "../components/Navbar";
 import DeviceGrid from "../components/DeviceGrid";
+import PopularDevices from "../components/PopularDevices";
 import ReviewCarousel from "../components/ReviewCarousel";
 import FAQ from "../components/FAQ";
 import Footer from "../components/Footer.astro";
@@ -21,10 +22,10 @@ import "../styles/global.css";
       <div class="grid lg:grid-cols-2 gap-10 items-center">
         <div>
           <h1 data-reveal class="font-display text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight leading-[1.1]">
-            Réparation iPhone &amp; Samsung à Bruxelles
+            Réparez votre téléphone &amp; ordinateur à Bruxelles
           </h1>
           <p data-reveal class="mt-5 text-lg text-white/80 max-w-lg leading-relaxed">
-            Pièces originales, prix transparents et généralement prêt en moins de 60 minutes.
+            Des solutions fiables et rapides pour vos appareils électroniques
           </p>
           <div data-reveal class="mt-8 flex flex-wrap gap-4">
             <a href="/rdv" class="inline-flex items-center gap-2 rounded-full bg-white hover:bg-white/90 px-7 py-3.5 text-base font-semibold text-bg-dark transition-colors shadow-lg shadow-black/20">
@@ -64,28 +65,7 @@ import "../styles/global.css";
           Tous les modèles →
         </a>
       </div>
-      <div data-reveal-children class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-        {[
-          { name: "iPhone 16", img: "/images/devices/iphone-16.webp", price: "79" },
-          { name: "iPhone 17 Pro", img: "/images/devices/iphone-17-pro.webp", price: "89" },
-          { name: "iPhone 16 Pro Max", img: "/images/devices/iphone-16-pro-max.webp", price: "89" },
-          { name: "iPhone 17", img: "/images/devices/iphone-17.webp", price: "79" },
-          { name: "Galaxy S26 Ultra", img: "/images/devices/galaxy-s26-ultra.webp", price: "89" },
-          { name: "Galaxy S26", img: "/images/devices/galaxy-s26.webp", price: "79" },
-          { name: "Galaxy S24", img: "/images/devices/galaxy-s24.webp", price: "69" },
-          { name: "iPad Pro", img: "/images/devices/ipad-pro.webp", price: "99" },
-          { name: "MacBook Air", img: "/images/devices/macbook-air.webp", price: "129" },
-          { name: "PS5", img: "/images/devices/ps5.webp", price: "49" },
-        ].map((d) => (
-          <a href="/prix" class="card group flex flex-col items-center p-5 text-center">
-            <div class="h-28 flex items-center justify-center mb-3">
-              <img src={d.img} alt={d.name} class="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-110" loading="lazy" />
-            </div>
-            <span class="font-display font-semibold text-sm text-text">{d.name}</span>
-            <span class="text-xs text-primary font-medium mt-1">à partir de € {d.price}</span>
-          </a>
-        ))}
-      </div>
+      <PopularDevices client:load />
     </div>
   </section>
 
@@ -343,10 +323,10 @@ import "../styles/global.css";
   <!-- ═══════ CTA GRADIENT CARD ═══════ -->
   <section class="py-10">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
-      <div data-reveal class="gradient-cta rounded-3xl p-10 lg:p-14 text-center text-white">
+      <div data-reveal class="bg-bg-dark rounded-3xl p-10 lg:p-14 text-center text-white">
         <h2 class="font-display text-2xl sm:text-3xl font-bold">Comment souhaitez-vous déposer votre appareil ?</h2>
         <div class="mt-8 flex flex-wrap justify-center gap-4">
-          <a href="/rdv" class="inline-flex items-center gap-2 rounded-full bg-white/20 border border-white/30 hover:bg-white/30 px-7 py-3.5 text-base font-semibold text-white transition-all backdrop-blur-sm">
+          <a href="/rdv" class="inline-flex items-center gap-2 rounded-full bg-primary hover:bg-primary-dark px-7 py-3.5 text-base font-semibold text-white transition-colors">
             Prendre rendez-vous
           </a>
         </div>

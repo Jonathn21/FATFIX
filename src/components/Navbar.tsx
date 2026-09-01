@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 const links = [
   { label: "Réparations", href: "/reparations" },
   { label: "Prix", href: "/prix" },
-  { label: "Reconditionnés", href: "/reconditionnes" },
+  /*{ label: "Reconditionnés", href: "/reconditionnes" },*/
   { label: "Boutiques", href: "/boutiques" },
   { label: "À propos", href: "/a-propos" },
   { label: "Contact", href: "/contact" },
@@ -27,7 +27,7 @@ export default function Navbar() {
   return (
     <>
       {/* Trust bar — scrolling marquee style */}
-      <div className="bg-bg-dark text-white text-xs py-2 hidden md:block">
+      <div className="bg-white text-text text-xs py-2 hidden md:block border-b border-border">
         <div className="mx-auto max-w-7xl px-6 flex items-center justify-between">
           <div className="flex items-center gap-5 flex-wrap">
             {/* Google rating */}
@@ -39,51 +39,49 @@ export default function Navbar() {
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
               </svg>
               <span className="font-semibold">4,9</span>
-              <span className="text-white/80">· 2 000+ avis Google</span>
+              <span className="text-text-muted">· 2 000+ avis Google</span>
             </span>
-            <span className="text-white/30">·</span>
-            <span className="flex items-center gap-1.5 text-white/90">
-              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+            <span className="text-border">·</span>
+            <span className="flex items-center gap-1.5 text-text-light">
+              <svg className="h-3.5 w-3.5 text-primary" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
               </svg>
               Jusqu'à 1 an de garantie
             </span>
-            <span className="text-white/30">·</span>
-            <span className="flex items-center gap-1.5 text-white/90">
-              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+            <span className="text-border">·</span>
+            <span className="flex items-center gap-1.5 text-text-light">
+              <svg className="h-3.5 w-3.5 text-primary" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
               Prêt en 60 min
             </span>
-            <span className="text-white/30">·</span>
-            <span className="text-white/90">Joignable 7j/7</span>
+            <span className="text-border">·</span>
+            <span className="text-text-light">Joignable 7j/7</span>
           </div>
-          <a href="tel:+3222194916" className="text-white/90 hover:text-white transition-colors flex items-center gap-1.5 font-medium">
+          <a href="tel:+3222194916" className="text-text-light hover:text-primary transition-colors flex items-center gap-1.5 font-medium">
             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
             </svg>
-            02 219 49 16
+            +32 02 219 49 16
           </a>
         </div>
       </div>
 
       {/* Main nav */}
       <header
-        className={`sticky top-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-border"
-            : "bg-white border-b border-border"
+        className={`sticky top-0 z-50 transition-all duration-300 bg-bg-dark ${
+          scrolled ? "shadow-md" : ""
         }`}
       >
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 lg:px-8">
           <a href="/" className="flex items-center select-none">
-            <img src="/images/logo-fastfix.png" alt="FastFix" className="h-10" />
+            <img src="/images/logo-fastfix-blanc.png" alt="FastFix" className="h-10" />
           </a>
 
           <ul className="hidden lg:flex items-center gap-6">
             {links.map((l) => (
               <li key={l.href}>
-                <a href={l.href} className="text-sm font-medium text-text-light hover:text-primary transition-colors">
+                <a href={l.href} className="text-sm font-medium text-white/80 hover:text-primary transition-colors">
                   {l.label}
                 </a>
               </li>
@@ -93,7 +91,7 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-3">
             <a
               href="tel:+3222194916"
-              className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-bg-alt transition-colors text-text-muted hover:text-primary"
+              className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-white/10 transition-colors text-white/70 hover:text-primary"
               aria-label="Appeler"
             >
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -114,9 +112,9 @@ export default function Navbar() {
             aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
           >
             <div className="flex flex-col gap-1.5">
-              <span className={`block h-0.5 w-6 rounded transition-all duration-300 origin-center ${menuOpen ? "bg-text rotate-45 translate-y-[4px]" : "bg-text-light"}`} />
-              <span className={`block h-0.5 w-6 rounded transition-all duration-300 ${menuOpen ? "opacity-0 scale-0" : "bg-text-light"}`} />
-              <span className={`block h-0.5 w-6 rounded transition-all duration-300 origin-center ${menuOpen ? "bg-text -rotate-45 -translate-y-[4px]" : "bg-text-light"}`} />
+              <span className={`block h-0.5 w-6 rounded transition-all duration-300 origin-center ${menuOpen ? "bg-text rotate-45 translate-y-[4px]" : "bg-white"}`} />
+              <span className={`block h-0.5 w-6 rounded transition-all duration-300 ${menuOpen ? "opacity-0 scale-0" : "bg-white"}`} />
+              <span className={`block h-0.5 w-6 rounded transition-all duration-300 origin-center ${menuOpen ? "bg-text -rotate-45 -translate-y-[4px]" : "bg-white"}`} />
             </div>
           </button>
         </nav>

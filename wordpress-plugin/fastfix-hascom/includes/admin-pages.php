@@ -34,6 +34,7 @@ function fastfix_render_dashboard_page() {
 			<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=fastfix_repair' ) ); ?>" class="button">Gérer les réparations</a>
 			<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=fastfix_refurbished' ) ); ?>" class="button">Gérer les reconditionnés</a>
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=fastfix-tarifs' ) ); ?>" class="button">Gérer les tarifs</a>
+			<a href="<?php echo esc_url( admin_url( 'upload.php?fastfix_media_group=fastfix&mode=list' ) ); ?>" class="button">Voir la galerie FastFix</a>
 		</p>
 		<hr>
 

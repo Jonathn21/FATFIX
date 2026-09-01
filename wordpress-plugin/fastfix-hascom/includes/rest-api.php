@@ -61,14 +61,17 @@ function fastfix_get_devices_list() {
 
 	$devices = [];
 	foreach ( $posts as $post ) {
-		$thumb_id = get_post_thumbnail_id( $post->ID );
+		$thumb_id       = get_post_thumbnail_id( $post->ID );
+		$starting_price = get_post_meta( $post->ID, '_fastfix_starting_price', true );
 		$devices[] = [
-			'id'           => $post->ID,
-			'name'         => $post->post_title,
-			'modelNumbers' => get_post_meta( $post->ID, '_fastfix_model_numbers', true ),
-			'brand'        => get_post_meta( $post->ID, '_fastfix_brand', true ),
-			'deviceType'   => get_post_meta( $post->ID, '_fastfix_device_type', true ),
-			'image'        => $thumb_id ? wp_get_attachment_image_url( $thumb_id, 'medium' ) : '',
+			'id'            => $post->ID,
+			'name'          => $post->post_title,
+			'modelNumbers'  => get_post_meta( $post->ID, '_fastfix_model_numbers', true ),
+			'brand'         => get_post_meta( $post->ID, '_fastfix_brand', true ),
+			'deviceType'    => get_post_meta( $post->ID, '_fastfix_device_type', true ),
+			'image'         => $thumb_id ? wp_get_attachment_image_url( $thumb_id, 'medium' ) : '',
+			'featured'      => get_post_meta( $post->ID, '_fastfix_featured', true ) === '1',
+			'startingPrice' => $starting_price === '' ? null : (float) $starting_price,
 		];
 	}
 

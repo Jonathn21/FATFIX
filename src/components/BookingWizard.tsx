@@ -284,7 +284,7 @@ export default function BookingWizard() {
       .catch(() => setRemoteDevices(null));
   }, []);
 
-  // Fiches réparations génériques par famille (éditables dans wp-admin →
+  // Fiches ations génériques par famille (éditables dans wp-admin →
   // FastFix → Réparations). Servent de repli tant qu'aucun modèle précis
   // n'est sélectionné, ou si l'appel par modèle échoue.
   useEffect(() => {
