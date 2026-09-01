@@ -31,6 +31,12 @@ add_action( 'rest_api_init', function() {
 		'permission_callback' => '__return_true',
 	] );
 
+	register_rest_route( 'fastfix/v1', '/refurbished', [
+		'methods'             => 'GET',
+		'callback'            => 'fastfix_get_refurbished_list',
+		'permission_callback' => '__return_true',
+	] );
+
 	register_rest_route( 'fastfix/v1', '/repairs', [
 		'methods'             => 'GET',
 		'callback'            => 'fastfix_get_repairs_grouped',
@@ -67,6 +73,47 @@ function fastfix_get_devices_list() {
 	}
 
 	return rest_ensure_response( $devices );
+}
+
+/**
+ * Catalogue des produits reconditionnés en vente.
+ */
+function fastfix_get_refurbished_list() {
+	$posts = get_posts( [
+		'post_type'      => 'fastfix_refurbished',
+		'post_status'    => 'publish',
+		'posts_per_page' => -1,
+		'orderby'        => 'menu_order',
+		'order'          => 'ASC',
+	] );
+
+	$products = [];
+	foreach ( $posts as $post ) {
+		$thumb_id  = get_post_thumbnail_id( $post->ID );
+		$price     = get_post_meta( $post->ID, '_fastfix_price', true );
+		$old_price = get_post_meta( $post->ID, '_fastfix_old_price', true );
+		$badge     = get_post_meta( $post->ID, '_fastfix_badge', true );
+
+		$product = [
+			'id'      => $post->ID,
+			'name'    => $post->post_title,
+			'grade'   => get_post_meta( $post->ID, '_fastfix_grade', true ),
+			'price'   => $price === '' ? 0 : (float) $price,
+			'color'   => get_post_meta( $post->ID, '_fastfix_color', true ),
+			'storage' => get_post_meta( $post->ID, '_fastfix_storage', true ),
+			'warranty'=> get_post_meta( $post->ID, '_fastfix_warranty', true ),
+			'image'   => $thumb_id ? wp_get_attachment_image_url( $thumb_id, 'medium' ) : '',
+		];
+		if ( $old_price !== '' ) {
+			$product['oldPrice'] = (float) $old_price;
+		}
+		if ( $badge !== '' ) {
+			$product['badge'] = $badge;
+		}
+		$products[] = $product;
+	}
+
+	return rest_ensure_response( $products );
 }
 
 /**

@@ -22,6 +22,8 @@ add_action( 'admin_menu', function() {
 function fastfix_render_dashboard_page() {
 	$counts = wp_count_posts( 'fastfix_booking' );
 	$total  = isset( $counts->publish ) ? $counts->publish : 0;
+	$result = get_transient( 'fastfix_import_result' );
+	if ( $result ) delete_transient( 'fastfix_import_result' );
 	?>
 	<div class="wrap">
 		<h1>FastFix — Tableau de bord</h1>
@@ -30,14 +32,55 @@ function fastfix_render_dashboard_page() {
 			<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=fastfix_booking' ) ); ?>" class="button button-primary">Voir les rendez-vous</a>
 			<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=fastfix_device' ) ); ?>" class="button">Gérer les appareils</a>
 			<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=fastfix_repair' ) ); ?>" class="button">Gérer les réparations</a>
+			<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=fastfix_refurbished' ) ); ?>" class="button">Gérer les reconditionnés</a>
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=fastfix-tarifs' ) ); ?>" class="button">Gérer les tarifs</a>
 		</p>
+		<hr>
+
+		<?php if ( isset( $_GET['imported'] ) && $result ) : ?>
+			<div class="notice notice-success">
+				<p><strong>Import terminé.</strong></p>
+				<p>
+					Appareils : <?php echo (int) $result['devices']['imported']; ?> importée(s),
+					<?php echo (int) $result['devices']['skipped']; ?> déjà en place,
+					<?php echo (int) $result['devices']['not_mapped']; ?> sans correspondance.
+				</p>
+				<p>
+					Reconditionnés : <?php echo (int) $result['refurbished']['imported']; ?> importée(s),
+					<?php echo (int) $result['refurbished']['skipped']; ?> déjà en place,
+					<?php echo (int) $result['refurbished']['not_mapped']; ?> sans correspondance.
+				</p>
+				<?php $errors = array_merge( $result['devices']['errors'], $result['refurbished']['errors'] ); ?>
+				<?php if ( $errors ) : ?>
+					<p><strong>Erreurs :</strong></p>
+					<ul style="list-style:disc;margin-left:20px;"><?php foreach ( $errors as $e ) : ?><li><?php echo esc_html( $e ); ?></li><?php endforeach; ?></ul>
+				<?php endif; ?>
+			</div>
+		<?php endif; ?>
+
+		<h2>Importer les photos depuis le site</h2>
+		<p>
+			Récupère automatiquement les photos déjà publiées sur <code><?php echo esc_html( FASTFIX_IMAGE_BASE_URL ); ?></code>
+			et les attache comme image mise en avant à chaque appareil / produit reconditionné qui n'en a pas encore.
+			Souvent une photo générique par génération d'appareil — libre à vous d'affiner ensuite modèle par modèle.
+		</p>
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+			<?php wp_nonce_field( 'fastfix_import_images' ); ?>
+			<input type="hidden" name="action" value="fastfix_import_images" />
+			<label style="display:block;margin-bottom:10px;">
+				<input type="checkbox" name="force" value="1" />
+				Remplacer aussi les photos déjà en place (réimport complet)
+			</label>
+			<button type="submit" class="button button-primary">Importer les photos maintenant</button>
+		</form>
+
 		<hr>
 		<h2>API utilisée par le site fastfix.be</h2>
 		<p>Le frontend Astro communique avec ces routes :</p>
 		<ul style="list-style:disc;margin-left:20px;">
 			<li><code><?php echo esc_html( rest_url( 'fastfix/v1/pricing' ) ); ?></code> — GET, tarifs actuels</li>
 			<li><code><?php echo esc_html( rest_url( 'fastfix/v1/devices' ) ); ?></code> — GET, catalogue des modèles + photos</li>
+			<li><code><?php echo esc_html( rest_url( 'fastfix/v1/refurbished' ) ); ?></code> — GET, produits reconditionnés + photos</li>
 			<li><code><?php echo esc_html( rest_url( 'fastfix/v1/repairs' ) ); ?></code> — GET, fiches réparations (par famille, ou <code>?device_id=</code> pour un modèle précis)</li>
 			<li><code><?php echo esc_html( rest_url( 'fastfix/v1/booking' ) ); ?></code> — POST, soumission d'une demande de RDV</li>
 		</ul>

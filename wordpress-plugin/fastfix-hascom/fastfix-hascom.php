@@ -2,20 +2,22 @@
 /**
  * Plugin Name: FastFix — Hascom
  * Plugin URI: https://fastfix.be
- * Description: Backend dédié à FastFix (enseigne réparation de Hascom Computer). Reçoit les demandes de rendez-vous depuis le site fastfix.be (Astro), gère le catalogue d'appareils (photos incluses) et les fiches réparations, par famille ou par modèle exact. Totalement isolé du reste du site — menu "FastFix" dédié dans wp-admin.
- * Version: 1.1.0
+ * Description: Backend dédié à FastFix (enseigne réparation de Hascom Computer). Gère rendez-vous, catalogue d'appareils (photos incluses), fiches réparations (par famille ou par modèle exact) et produits reconditionnés. Totalement isolé du reste du site — menu "FastFix" dédié dans wp-admin.
+ * Version: 1.2.0
  * Author: FastFix / Hascom Computer
  * Text Domain: fastfix-hascom
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'FASTFIX_VERSION', '1.1.0' );
+define( 'FASTFIX_VERSION', '1.2.0' );
 define( 'FASTFIX_PATH', plugin_dir_path( __FILE__ ) );
 
 require_once FASTFIX_PATH . 'includes/cpt-booking.php';
 require_once FASTFIX_PATH . 'includes/cpt-repair.php';
 require_once FASTFIX_PATH . 'includes/cpt-device.php';
+require_once FASTFIX_PATH . 'includes/cpt-refurbished.php';
+require_once FASTFIX_PATH . 'includes/image-import.php';
 require_once FASTFIX_PATH . 'includes/rest-api.php';
 require_once FASTFIX_PATH . 'includes/admin-pages.php';
 
@@ -23,6 +25,7 @@ register_activation_hook( __FILE__, function() {
 	fastfix_register_booking_cpt();
 	fastfix_register_repair_cpt();
 	fastfix_register_device_cpt();
+	fastfix_register_refurbished_cpt();
 	flush_rewrite_rules();
 
 	if ( false === get_option( 'fastfix_pricing' ) ) {
@@ -37,6 +40,7 @@ register_activation_hook( __FILE__, function() {
 
 	fastfix_seed_default_repairs();
 	fastfix_seed_default_devices();
+	fastfix_seed_default_refurbished();
 } );
 
 register_deactivation_hook( __FILE__, function() {
@@ -56,5 +60,9 @@ add_action( 'admin_init', function() {
 	if ( ! get_option( 'fastfix_devices_seeded' ) ) {
 		fastfix_seed_default_devices();
 		update_option( 'fastfix_devices_seeded', 1 );
+	}
+	if ( ! get_option( 'fastfix_refurbished_seeded' ) ) {
+		fastfix_seed_default_refurbished();
+		update_option( 'fastfix_refurbished_seeded', 1 );
 	}
 } );
