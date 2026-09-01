@@ -1,4 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+
+/* ─── API ─── */
+// URL du backend WordPress (plugin "FastFix — Hascom"). À remplacer par
+// https://fastfix.be/wp-json/fastfix/v1 une fois le domaine final branché.
+const FASTFIX_API_URL = "https://ahmedc12.sg-host.com/wp-json/fastfix/v1";
 
 /* ─── DATA ─── */
 const brands = [
@@ -155,6 +160,7 @@ interface RepairCategory {
   repairs: Repair[];
 }
 
+// Fallback local utilisé tant que l'API n'a pas répondu, ou si elle échoue.
 const repairsByType: Record<string, RepairCategory[]> = {
   iphone: [
     {
@@ -199,7 +205,8 @@ const repairsByType: Record<string, RepairCategory[]> = {
   ],
 };
 
-// Default repairs for types without specific data
+// Repairs fallback (utilisé si l'API WordPress est injoignable) — pour les
+// types d'appareil sans fiche spécifique.
 const defaultRepairs: RepairCategory[] = [
   {
     icon: "📱", title: "Écran", repairs: [
@@ -218,10 +225,6 @@ const defaultRepairs: RepairCategory[] = [
   },
 ];
 
-function getRepairs(deviceType: string): RepairCategory[] {
-  return repairsByType[deviceType] || defaultRepairs;
-}
-
 /* ─── COMPONENT ─── */
 export default function BookingWizard() {
   const [step, setStep] = useState(1);
@@ -231,8 +234,26 @@ export default function BookingWizard() {
   const [selectedRepairs, setSelectedRepairs] = useState<Repair[]>([]);
   const [search, setSearch] = useState("");
   const [clientType, setClientType] = useState<"particulier" | "entreprise">("particulier");
-  const [formData, setFormData] = useState({ name: "", phone: "", email: "", notes: "" });
+  const [remoteRepairs, setRemoteRepairs] = useState<Record<string, RepairCategory[]> | null>(null);
+
+  // Récupère les fiches réparations depuis WordPress (éditables dans wp-admin
+  // → FastFix → Réparations). En cas d'échec, on garde le fallback local.
+  useEffect(() => {
+    fetch(`${FASTFIX_API_URL}/repairs`)
+      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+      .then((data) => setRemoteRepairs(data))
+      .catch(() => setRemoteRepairs(null));
+  }, []);
+
+  const getRepairs = (type: string): RepairCategory[] => {
+    const source = remoteRepairs ?? repairsByType;
+    return source[type] || (remoteRepairs?.default ?? defaultRepairs);
+  };
+  const [formData, setFormData] = useState({ name: "", phone: "", email: "", notes: "", website: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [reference, setReference] = useState<string | null>(null);
 
   const currentDeviceTypes = deviceTypes[brand] || [];
   const currentDevices = devices[deviceType] || [];
@@ -266,9 +287,49 @@ export default function BookingWizard() {
     );
   };
 
-  const handleSubmit = () => {
-    setSubmitted(true);
-    setStep(4);
+  const handleSubmit = async () => {
+    if (!selectedDevice) return;
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    const deviceLabel = `${brands.find((b) => b.id === brand)?.label ?? ""} ${selectedDevice.name}`.trim();
+    const repairsLabel = selectedRepairs.map((r) => r.name).join(", ");
+
+    try {
+      const res = await fetch(`${FASTFIX_API_URL}/booking`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.notes,
+          clientType,
+          deviceLabel,
+          repairsLabel,
+          priceTotal: total,
+          website: formData.website, // honeypot anti-spam, doit rester vide
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Une erreur est survenue. Réessayez.");
+      }
+
+      setReference(data.reference);
+      setSubmitted(true);
+      setStep(4);
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error
+          ? err.message
+          : "Impossible d'envoyer votre demande. Vérifiez votre connexion et réessayez, ou appelez-nous au 02 219 49 16."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   /* ─── STEP INDICATOR ─── */
@@ -614,7 +675,7 @@ export default function BookingWizard() {
                   required
                 />
               </div>
-              <div className="mb-6">
+              <div className="mb-4">
                 <label className="block text-xs font-bold text-text mb-1.5">Remarques (optionnel)</label>
                 <textarea
                   value={formData.notes}
@@ -625,6 +686,24 @@ export default function BookingWizard() {
                 />
               </div>
 
+              {/* Honeypot anti-spam — champ caché, doit rester vide */}
+              <input
+                type="text"
+                name="website"
+                value={formData.website}
+                onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                tabIndex={-1}
+                autoComplete="off"
+                className="hidden"
+                aria-hidden="true"
+              />
+
+              {submitError && (
+                <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 mb-4">
+                  <p className="text-sm text-red-600">{submitError}</p>
+                </div>
+              )}
+
               {/* Actions */}
               <div className="flex items-center justify-between">
                 <button onClick={() => setStep(2)} className="inline-flex items-center gap-1.5 rounded-full border border-border px-5 py-2.5 text-xs font-semibold text-text-muted hover:border-primary hover:text-primary transition-all">
@@ -632,10 +711,10 @@ export default function BookingWizard() {
                 </button>
                 <button
                   onClick={handleSubmit}
-                  disabled={!formData.name || !formData.phone || !formData.email}
+                  disabled={!formData.name || !formData.phone || !formData.email || isSubmitting}
                   className="inline-flex items-center gap-2 rounded-full bg-primary hover:bg-primary-dark disabled:opacity-40 disabled:cursor-not-allowed px-6 py-3 text-sm font-semibold text-white transition-colors"
                 >
-                  ✓ Confirmer la demande
+                  {isSubmitting ? "Envoi en cours..." : "✓ Confirmer la demande"}
                 </button>
               </div>
             </div>
@@ -653,6 +732,9 @@ export default function BookingWizard() {
               <p className="text-text-muted text-sm mb-8">Merci ! Notre équipe vous recontacte dans les 2 heures ouvrées.</p>
 
               <div className="inline-block text-left rounded-xl border border-border p-6 mb-8">
+                {reference && (
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-primary mb-3">Référence {reference}</p>
+                )}
                 <p className="font-semibold text-sm mb-2">{brands.find(b => b.id === brand)?.label} {selectedDevice?.name}</p>
                 {selectedRepairs.map((r) => (
                   <p key={r.name} className="text-sm text-text-muted">• {r.name} — €{r.price}</p>
