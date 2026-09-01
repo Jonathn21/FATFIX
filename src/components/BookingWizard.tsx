@@ -32,10 +32,35 @@ const deviceTypes: Record<string, { id: string; label: string }[]> = {
 };
 
 interface DeviceModel {
+  id?: number; // présent quand le modèle vient de l'API WordPress
   name: string;
   models: string;
   img: string;
 }
+
+interface RemoteDevice {
+  id: number;
+  name: string;
+  modelNumbers: string;
+  brand: string;
+  deviceType: string;
+  image: string;
+}
+
+// Icône générique par famille, utilisée quand un appareil créé dans
+// wp-admin n'a pas encore de photo uploadée.
+const DEVICE_TYPE_FALLBACK_IMG: Record<string, string> = {
+  iphone: "/images/devices/iphone-16.webp",
+  ipad: "/images/devices/ipad-pro.webp",
+  "apple-watch": "/images/devices/apple-watch.webp",
+  macbook: "/images/devices/macbook-air.webp",
+  "galaxy-s": "/images/devices/galaxy-s24.webp",
+  "galaxy-a": "/images/devices/galaxy-s24.webp",
+  "galaxy-tab": "/images/devices/galaxy-tab.webp",
+  "galaxy-z": "/images/devices/galaxy-s24.webp",
+  pixel: "/images/devices/pixel-10-pro.webp",
+  "pixel-tablet": "/images/devices/pixel-10-pro.webp",
+};
 
 const devices: Record<string, DeviceModel[]> = {
   iphone: [
@@ -235,15 +260,50 @@ export default function BookingWizard() {
   const [search, setSearch] = useState("");
   const [clientType, setClientType] = useState<"particulier" | "entreprise">("particulier");
   const [remoteRepairs, setRemoteRepairs] = useState<Record<string, RepairCategory[]> | null>(null);
+  const [remoteDevices, setRemoteDevices] = useState<Record<string, DeviceModel[]> | null>(null);
 
-  // Récupère les fiches réparations depuis WordPress (éditables dans wp-admin
-  // → FastFix → Réparations). En cas d'échec, on garde le fallback local.
+  // Catalogue d'appareils (photos + numéros de modèle), éditable dans
+  // wp-admin → FastFix → Appareils. En cas d'échec, on garde le fallback local.
+  useEffect(() => {
+    fetch(`${FASTFIX_API_URL}/devices`)
+      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+      .then((list: RemoteDevice[]) => {
+        if (!Array.isArray(list) || list.length === 0) return;
+        const grouped: Record<string, DeviceModel[]> = {};
+        list.forEach((d) => {
+          if (!grouped[d.deviceType]) grouped[d.deviceType] = [];
+          grouped[d.deviceType].push({
+            id: d.id,
+            name: d.name,
+            models: d.modelNumbers,
+            img: d.image || DEVICE_TYPE_FALLBACK_IMG[d.deviceType] || DEVICE_TYPE_FALLBACK_IMG.iphone,
+          });
+        });
+        setRemoteDevices(grouped);
+      })
+      .catch(() => setRemoteDevices(null));
+  }, []);
+
+  // Fiches réparations génériques par famille (éditables dans wp-admin →
+  // FastFix → Réparations). Servent de repli tant qu'aucun modèle précis
+  // n'est sélectionné, ou si l'appel par modèle échoue.
   useEffect(() => {
     fetch(`${FASTFIX_API_URL}/repairs`)
       .then((res) => (res.ok ? res.json() : Promise.reject(res)))
       .then((data) => setRemoteRepairs(data))
       .catch(() => setRemoteRepairs(null));
   }, []);
+
+  // Quand un modèle précis (avec id WordPress) est sélectionné, on va
+  // chercher les fiches résolues pour CE modèle — tarifs/descriptions
+  // spécifiques à ce modèle appliqués par-dessus les fiches génériques.
+  useEffect(() => {
+    if (!selectedDevice?.id) return;
+    fetch(`${FASTFIX_API_URL}/repairs?device_id=${selectedDevice.id}`)
+      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+      .then((data) => setRemoteRepairs((prev) => ({ ...prev, ...data })))
+      .catch(() => {});
+  }, [selectedDevice?.id]);
 
   const getRepairs = (type: string): RepairCategory[] => {
     const source = remoteRepairs ?? repairsByType;
@@ -256,7 +316,7 @@ export default function BookingWizard() {
   const [reference, setReference] = useState<string | null>(null);
 
   const currentDeviceTypes = deviceTypes[brand] || [];
-  const currentDevices = devices[deviceType] || [];
+  const currentDevices = remoteDevices?.[deviceType] ?? devices[deviceType] ?? [];
   const filteredDevices = useMemo(() => {
     if (!search.trim()) return currentDevices;
     const q = search.toLowerCase();

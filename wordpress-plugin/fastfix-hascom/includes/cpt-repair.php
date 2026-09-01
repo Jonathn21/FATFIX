@@ -59,7 +59,8 @@ add_filter( 'manage_fastfix_repair_posts_columns', function( $columns ) {
 	$new                     = [];
 	$new['cb']               = $columns['cb'];
 	$new['title']            = 'Réparation';
-	$new['fastfix_device']   = 'Appareil';
+	$new['fastfix_device']   = 'Famille';
+	$new['fastfix_model']    = 'Modèle spécifique';
 	$new['fastfix_category'] = 'Catégorie';
 	$new['fastfix_price']    = 'Prix';
 	$new['fastfix_badge']    = 'Badge';
@@ -73,6 +74,10 @@ add_action( 'manage_fastfix_repair_posts_custom_column', function( $column, $pos
 			$type   = get_post_meta( $post_id, '_fastfix_device_type', true );
 			$labels = fastfix_device_type_choices();
 			echo esc_html( $labels[ $type ] ?? $type );
+			break;
+		case 'fastfix_model':
+			$device_id = get_post_meta( $post_id, '_fastfix_device_id', true );
+			echo $device_id ? esc_html( get_the_title( $device_id ) ) : '<span style="color:#888;">— toute la famille —</span>';
 			break;
 		case 'fastfix_category':
 			echo esc_html( get_post_meta( $post_id, '_fastfix_category', true ) );
@@ -135,7 +140,7 @@ function fastfix_render_repair_meta_box( $post ) {
 
 	<div class="fastfix-row">
 		<div class="fastfix-field">
-			<label for="fastfix_device_type">Appareil</label>
+			<label for="fastfix_device_type">Famille d'appareil</label>
 			<select name="fastfix_device_type" id="fastfix_device_type" style="width:100%;">
 				<?php foreach ( fastfix_device_type_choices() as $key => $label ) : ?>
 					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $device_type, $key ); ?>><?php echo esc_html( $label ); ?></option>
@@ -150,6 +155,25 @@ function fastfix_render_repair_meta_box( $post ) {
 			<label for="fastfix_icon">Icône</label>
 			<input type="text" name="fastfix_icon" id="fastfix_icon" value="<?php echo esc_attr( $icon ); ?>" style="width:100%;" placeholder="📱" />
 		</div>
+	</div>
+
+	<div class="fastfix-field">
+		<?php
+		$device_id = get_post_meta( $post->ID, '_fastfix_device_id', true );
+		$models    = get_posts( [ 'post_type' => 'fastfix_device', 'posts_per_page' => -1, 'orderby' => 'title', 'order' => 'ASC' ] );
+		?>
+		<label for="fastfix_device_id">Modèle spécifique (optionnel)</label>
+		<select name="fastfix_device_id" id="fastfix_device_id" style="width:100%;max-width:400px;">
+			<option value="">— Toute la famille "<?php echo esc_html( fastfix_device_type_choices()[ $device_type ] ?? $device_type ); ?>" (par défaut) —</option>
+			<?php foreach ( $models as $model ) : ?>
+				<option value="<?php echo esc_attr( $model->ID ); ?>" <?php selected( (string) $device_id, (string) $model->ID ); ?>><?php echo esc_html( $model->post_title ); ?></option>
+			<?php endforeach; ?>
+		</select>
+		<p class="description">
+			Laissez sur la valeur par défaut pour que cette fiche s'applique à toute la famille (ex: tous les iPhone).
+			Choisissez un modèle précis pour <strong>remplacer</strong> le prix/la description de cette réparation
+			uniquement pour ce modèle (ex: écran iPhone 16 différent d'écran iPhone 8).
+		</p>
 	</div>
 
 	<div class="fastfix-field">
@@ -219,6 +243,7 @@ add_action( 'save_post_fastfix_repair', function( $post_id ) {
 
 	$fields = [
 		'fastfix_device_type' => 'sanitize_key',
+		'fastfix_device_id'   => 'sanitize_text_field',
 		'fastfix_category'    => 'sanitize_text_field',
 		'fastfix_icon'        => 'sanitize_text_field',
 		'fastfix_desc'        => 'sanitize_textarea_field',

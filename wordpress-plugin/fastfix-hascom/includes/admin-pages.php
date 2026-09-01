@@ -28,6 +28,7 @@ function fastfix_render_dashboard_page() {
 		<p><?php echo esc_html( $total ); ?> demande(s) de rendez-vous enregistrée(s).</p>
 		<p>
 			<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=fastfix_booking' ) ); ?>" class="button button-primary">Voir les rendez-vous</a>
+			<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=fastfix_device' ) ); ?>" class="button">Gérer les appareils</a>
 			<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=fastfix_repair' ) ); ?>" class="button">Gérer les réparations</a>
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=fastfix-tarifs' ) ); ?>" class="button">Gérer les tarifs</a>
 		</p>
@@ -36,7 +37,8 @@ function fastfix_render_dashboard_page() {
 		<p>Le frontend Astro communique avec ces routes :</p>
 		<ul style="list-style:disc;margin-left:20px;">
 			<li><code><?php echo esc_html( rest_url( 'fastfix/v1/pricing' ) ); ?></code> — GET, tarifs actuels</li>
-			<li><code><?php echo esc_html( rest_url( 'fastfix/v1/repairs' ) ); ?></code> — GET, fiches réparations par appareil</li>
+			<li><code><?php echo esc_html( rest_url( 'fastfix/v1/devices' ) ); ?></code> — GET, catalogue des modèles + photos</li>
+			<li><code><?php echo esc_html( rest_url( 'fastfix/v1/repairs' ) ); ?></code> — GET, fiches réparations (par famille, ou <code>?device_id=</code> pour un modèle précis)</li>
 			<li><code><?php echo esc_html( rest_url( 'fastfix/v1/booking' ) ); ?></code> — POST, soumission d'une demande de RDV</li>
 		</ul>
 	</div>

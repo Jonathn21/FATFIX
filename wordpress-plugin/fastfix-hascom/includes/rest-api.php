@@ -5,7 +5,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * API REST dédiée FastFix — namespace "fastfix/v1", isolé du reste du site.
  *
  *   GET  /wp-json/fastfix/v1/pricing   → grille des tarifs (public)
- *   GET  /wp-json/fastfix/v1/repairs   → fiches réparations groupées par appareil (public)
+ *   GET  /wp-json/fastfix/v1/devices   → catalogue des modèles, avec photos (public)
+ *   GET  /wp-json/fastfix/v1/repairs               → fiches génériques par famille (public)
+ *   GET  /wp-json/fastfix/v1/repairs?device_id=123 → fiches résolues pour un modèle précis (public)
  *   POST /wp-json/fastfix/v1/booking   → soumission d'une demande de RDV (public)
  */
 add_action( 'rest_api_init', function() {
@@ -23,30 +25,143 @@ add_action( 'rest_api_init', function() {
 		'permission_callback' => '__return_true',
 	] );
 
+	register_rest_route( 'fastfix/v1', '/devices', [
+		'methods'             => 'GET',
+		'callback'            => 'fastfix_get_devices_list',
+		'permission_callback' => '__return_true',
+	] );
+
 	register_rest_route( 'fastfix/v1', '/repairs', [
 		'methods'             => 'GET',
 		'callback'            => 'fastfix_get_repairs_grouped',
 		'permission_callback' => '__return_true',
+		'args'                => [
+			'device_id' => [ 'required' => false, 'sanitize_callback' => 'absint' ],
+		],
 	] );
 } );
 
 /**
- * Regroupe les fiches fastfix_repair par appareil puis par catégorie,
- * dans le même format que le frontend Astro consomme :
- *   { iphone: [ { icon, title, repairs: [...] } ], default: [...], ... }
+ * Catalogue des appareils — un modèle par entrée, avec photo (média WordPress).
  */
-function fastfix_get_repairs_grouped() {
+function fastfix_get_devices_list() {
 	$posts = get_posts( [
-		'post_type'      => 'fastfix_repair',
+		'post_type'      => 'fastfix_device',
 		'post_status'    => 'publish',
 		'posts_per_page' => -1,
 		'orderby'        => 'menu_order',
 		'order'          => 'ASC',
 	] );
 
-	$grouped = [];
-
+	$devices = [];
 	foreach ( $posts as $post ) {
+		$thumb_id = get_post_thumbnail_id( $post->ID );
+		$devices[] = [
+			'id'           => $post->ID,
+			'name'         => $post->post_title,
+			'modelNumbers' => get_post_meta( $post->ID, '_fastfix_model_numbers', true ),
+			'brand'        => get_post_meta( $post->ID, '_fastfix_brand', true ),
+			'deviceType'   => get_post_meta( $post->ID, '_fastfix_device_type', true ),
+			'image'        => $thumb_id ? wp_get_attachment_image_url( $thumb_id, 'medium' ) : '',
+		];
+	}
+
+	return rest_ensure_response( $devices );
+}
+
+/**
+ * Convertit une fiche fastfix_repair en tableau exploitable par le frontend.
+ */
+function fastfix_format_repair_post( $post ) {
+	$price     = get_post_meta( $post->ID, '_fastfix_price', true );
+	$old_price = get_post_meta( $post->ID, '_fastfix_old_price', true );
+	$features  = get_post_meta( $post->ID, '_fastfix_features', true );
+
+	$repair = [
+		'name'     => $post->post_title,
+		'desc'     => get_post_meta( $post->ID, '_fastfix_desc', true ),
+		'price'    => $price === '' ? 0 : (float) $price,
+		'features' => $features ? array_values( array_filter( array_map( 'trim', explode( "\n", $features ) ) ) ) : [],
+		'time'     => get_post_meta( $post->ID, '_fastfix_time', true ),
+		'warranty' => get_post_meta( $post->ID, '_fastfix_warranty', true ),
+	];
+
+	if ( $old_price !== '' ) {
+		$repair['oldPrice'] = (float) $old_price;
+	}
+	$badge = get_post_meta( $post->ID, '_fastfix_badge', true );
+	if ( $badge !== '' ) {
+		$repair['badge']      = $badge;
+		$repair['badgeColor'] = get_post_meta( $post->ID, '_fastfix_badge_color', true ) ?: 'primary';
+	}
+	$attention = get_post_meta( $post->ID, '_fastfix_attention', true );
+	if ( $attention !== '' ) {
+		$repair['attention'] = $attention;
+	}
+
+	return $repair;
+}
+
+/**
+ * Insère/remplace une réparation dans une structure groupée par catégorie,
+ * en conservant l'ordre d'apparition des catégories.
+ */
+function fastfix_upsert_into_groups( array &$groups, $category, $icon, array $repair ) {
+	$group_index = null;
+	foreach ( $groups as $i => $group ) {
+		if ( $group['title'] === $category ) {
+			$group_index = $i;
+			break;
+		}
+	}
+	if ( $group_index === null ) {
+		$groups[]    = [ 'icon' => $icon, 'title' => $category, 'repairs' => [] ];
+		$group_index = count( $groups ) - 1;
+	}
+
+	// Si une réparation du même nom existe déjà dans cette catégorie
+	// (cas d'une surcharge par modèle), on la remplace plutôt que de dupliquer.
+	$repair_index = null;
+	foreach ( $groups[ $group_index ]['repairs'] as $i => $r ) {
+		if ( $r['name'] === $repair['name'] ) {
+			$repair_index = $i;
+			break;
+		}
+	}
+	if ( $repair_index === null ) {
+		$groups[ $group_index ]['repairs'][] = $repair;
+	} else {
+		$groups[ $group_index ]['repairs'][ $repair_index ] = $repair;
+	}
+}
+
+/**
+ * Regroupe les fiches fastfix_repair par appareil puis par catégorie.
+ *
+ * Sans paramètre : renvoie les fiches génériques par famille, format
+ *   { iphone: [ { icon, title, repairs: [...] } ], default: [...], ... }
+ *
+ * Avec ?device_id=123 : renvoie uniquement les catégories de la famille de
+ * ce modèle, avec les éventuelles fiches spécifiques à ce modèle exact
+ * appliquées par-dessus (remplacent une fiche générique du même nom, ou
+ * s'ajoutent si elles n'existent pas génériquement).
+ */
+function fastfix_get_repairs_grouped( WP_REST_Request $request ) {
+	$device_id = (int) $request->get_param( 'device_id' );
+
+	$all_posts = get_posts( [
+		'post_type'      => 'fastfix_repair',
+		'post_status'    => 'publish',
+		'posts_per_page' => -1,
+		'orderby'        => 'menu_order',
+		'order'          => 'ASC',
+	] );
+	$generic_posts = array_filter( $all_posts, function( $p ) {
+		return (string) get_post_meta( $p->ID, '_fastfix_device_id', true ) === '';
+	} );
+
+	$grouped = [];
+	foreach ( $generic_posts as $post ) {
 		$device_type = get_post_meta( $post->ID, '_fastfix_device_type', true ) ?: 'default';
 		$category    = get_post_meta( $post->ID, '_fastfix_category', true ) ?: 'Réparations';
 		$icon        = get_post_meta( $post->ID, '_fastfix_icon', true ) ?: '🔧';
@@ -54,53 +169,42 @@ function fastfix_get_repairs_grouped() {
 		if ( ! isset( $grouped[ $device_type ] ) ) {
 			$grouped[ $device_type ] = [];
 		}
-
-		// Cherche un groupe existant pour cette catégorie au sein de cet appareil.
-		$group_index = null;
-		foreach ( $grouped[ $device_type ] as $i => $group ) {
-			if ( $group['title'] === $category ) {
-				$group_index = $i;
-				break;
-			}
-		}
-		if ( $group_index === null ) {
-			$grouped[ $device_type ][] = [ 'icon' => $icon, 'title' => $category, 'repairs' => [] ];
-			$group_index = count( $grouped[ $device_type ] ) - 1;
-		}
-
-		$price     = get_post_meta( $post->ID, '_fastfix_price', true );
-		$old_price = get_post_meta( $post->ID, '_fastfix_old_price', true );
-		$features  = get_post_meta( $post->ID, '_fastfix_features', true );
-
-		$repair = [
-			'name'     => $post->post_title,
-			'desc'     => get_post_meta( $post->ID, '_fastfix_desc', true ),
-			'price'    => $price === '' ? 0 : (float) $price,
-			'features' => $features ? array_values( array_filter( array_map( 'trim', explode( "\n", $features ) ) ) ) : [],
-			'time'     => get_post_meta( $post->ID, '_fastfix_time', true ),
-			'warranty' => get_post_meta( $post->ID, '_fastfix_warranty', true ),
-		];
-
-		if ( $old_price !== '' ) {
-			$repair['oldPrice'] = (float) $old_price;
-		}
-		$badge = get_post_meta( $post->ID, '_fastfix_badge', true );
-		if ( $badge !== '' ) {
-			$repair['badge']      = $badge;
-			$repair['badgeColor'] = get_post_meta( $post->ID, '_fastfix_badge_color', true ) ?: 'primary';
-		}
-		$attention = get_post_meta( $post->ID, '_fastfix_attention', true );
-		if ( $attention !== '' ) {
-			$repair['attention'] = $attention;
-		}
-
-		$grouped[ $device_type ][ $group_index ]['repairs'][] = $repair;
+		fastfix_upsert_into_groups( $grouped[ $device_type ], $category, $icon, fastfix_format_repair_post( $post ) );
 	}
 
-	return rest_ensure_response( $grouped );
+	// Sans device_id : comportement générique par famille (rétro-compatible).
+	if ( ! $device_id ) {
+		return rest_ensure_response( $grouped );
+	}
+
+	// Avec device_id : on résout pour ce modèle précis.
+	$device = get_post( $device_id );
+	if ( ! $device || $device->post_type !== 'fastfix_device' ) {
+		return rest_ensure_response( $grouped );
+	}
+	$device_type = get_post_meta( $device_id, '_fastfix_device_type', true ) ?: 'default';
+	$resolved    = $grouped[ $device_type ] ?? ( $grouped['default'] ?? [] );
+
+	$specific_posts = array_filter( $all_posts, function( $p ) use ( $device_id ) {
+		return (int) get_post_meta( $p->ID, '_fastfix_device_id', true ) === $device_id;
+	} );
+
+	foreach ( $specific_posts as $post ) {
+		$category = get_post_meta( $post->ID, '_fastfix_category', true ) ?: 'Réparations';
+		$icon     = get_post_meta( $post->ID, '_fastfix_icon', true ) ?: '🔧';
+		fastfix_upsert_into_groups( $resolved, $category, $icon, fastfix_format_repair_post( $post ) );
+	}
+
+	return rest_ensure_response( [ $device_type => $resolved ] );
 }
 
-/* ── CORS restreint au namespace fastfix/v1 uniquement ── */
+/* ── CORS + no-cache, restreint au namespace fastfix/v1 uniquement ──
+ * Le cache proxy SiteGround (Speed Optimizer) met en cache les réponses
+ * GET par défaut, y compris les routes REST dynamiques. On force donc
+ * explicitement "no-store" pour que /pricing et /repairs reflètent
+ * toujours les données actuelles de wp-admin, sans devoir vider le cache
+ * manuellement à chaque modification.
+ */
 add_filter( 'rest_pre_serve_request', function( $value, $result, $request ) {
 	if ( strpos( $request->get_route(), '/fastfix/v1' ) !== 0 ) {
 		return $value;
@@ -119,9 +223,22 @@ add_filter( 'rest_pre_serve_request', function( $value, $result, $request ) {
 	}
 	header( 'Access-Control-Allow-Methods: GET, POST, OPTIONS' );
 	header( 'Access-Control-Allow-Headers: Content-Type' );
+	header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
+	header( 'Pragma: no-cache' );
 
 	return $value;
 }, 10, 3 );
+
+/* ── Empêche aussi SiteGround Speed Optimizer de mettre en cache ces routes,
+ * indépendamment des headers, via son propre filtre d'exclusion d'URL. ── */
+add_filter( 'sgo_noptimize_urls', function( $urls ) {
+	$urls[] = 'wp-json/fastfix';
+	return $urls;
+} );
+add_filter( 'sgo_dynamic_cache_exception_regex', function( $patterns ) {
+	$patterns[] = '#/wp-json/fastfix/#';
+	return $patterns;
+} );
 
 /* ── Grille de tarifs par défaut (éditable ensuite depuis wp-admin → FastFix → Tarifs) ── */
 function fastfix_default_pricing() {
