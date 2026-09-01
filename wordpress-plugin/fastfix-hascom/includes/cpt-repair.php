@@ -64,6 +64,7 @@ add_filter( 'manage_fastfix_repair_posts_columns', function( $columns ) {
 	$new['fastfix_category'] = 'Catégorie';
 	$new['fastfix_price']    = 'Prix';
 	$new['fastfix_badge']    = 'Badge';
+	$new['fastfix_featured'] = 'Page d\'accueil';
 	$new['date']             = $columns['date'];
 	return $new;
 } );
@@ -89,6 +90,13 @@ add_action( 'manage_fastfix_repair_posts_custom_column', function( $column, $pos
 		case 'fastfix_badge':
 			$badge = get_post_meta( $post_id, '_fastfix_badge', true );
 			echo $badge ? esc_html( $badge ) : '—';
+			break;
+		case 'fastfix_featured':
+			if ( get_post_meta( $post_id, '_fastfix_featured', true ) === '1' ) {
+				echo '<span style="color:#16A34A;font-weight:600;">★ Populaire</span>';
+			} else {
+				echo '<span style="color:#888;">—</span>';
+			}
 			break;
 	}
 }, 10, 2 );
@@ -135,6 +143,7 @@ function fastfix_render_repair_meta_box( $post ) {
 	$time         = get_post_meta( $post->ID, '_fastfix_time', true );
 	$warranty     = get_post_meta( $post->ID, '_fastfix_warranty', true ) ?: '6 mois de garantie';
 	$attention    = get_post_meta( $post->ID, '_fastfix_attention', true );
+	$featured     = get_post_meta( $post->ID, '_fastfix_featured', true );
 	?>
 	<style>.fastfix-field{margin-bottom:16px;}.fastfix-field label{display:block;font-weight:600;margin-bottom:4px;}.fastfix-field .description{margin-top:4px;}.fastfix-row{display:flex;gap:16px;}.fastfix-row>.fastfix-field{flex:1;}</style>
 
@@ -175,6 +184,14 @@ function fastfix_render_repair_meta_box( $post ) {
 			uniquement pour ce modèle (ex: écran iPhone 16 différent d'écran iPhone 8).
 		</p>
 	</div>
+
+	<hr>
+	<p>
+		<label>
+			<input type="checkbox" name="fastfix_featured" value="1" <?php checked( $featured, '1' ); ?> />
+			<strong>Réparation populaire</strong> — l'afficher dans la section "Réparations populaires" de la page d'accueil
+		</label>
+	</p>
 
 	<div class="fastfix-field">
 		<label for="fastfix_desc">Description ("Idéal pour :")</label>
@@ -262,6 +279,7 @@ add_action( 'save_post_fastfix_repair', function( $post_id ) {
 			update_post_meta( $post_id, '_' . $field, call_user_func( $sanitizer, $_POST[ $field ] ) );
 		}
 	}
+	update_post_meta( $post_id, '_fastfix_featured', isset( $_POST['fastfix_featured'] ) ? '1' : '' );
 } );
 
 /**
@@ -338,6 +356,37 @@ function fastfix_seed_default_repairs() {
 				update_post_meta( $post_id, '_fastfix_warranty', $r['warranty'] ?? '' );
 				update_post_meta( $post_id, '_fastfix_attention', $r['attention'] ?? '' );
 			}
+		}
+	}
+}
+
+/**
+ * Marque comme "populaire" une sélection de réparations existantes, pour la
+ * section "Réparations populaires" de la page d'accueil. Ne modifie jamais
+ * une réparation déjà marquée/démarquée manuellement dans wp-admin.
+ */
+function fastfix_seed_featured_repairs() {
+	$featured_names = [
+		'Remplacement de la vitre',
+		'Batterie',
+		'Diagnostic',
+		'Vitre arrière',
+		'Écran complet iPad',
+		'Traitement dégât des eaux',
+	];
+
+	foreach ( $featured_names as $name ) {
+		$posts = get_posts( [
+			'post_type'      => 'fastfix_repair',
+			'title'          => $name,
+			'posts_per_page' => 1,
+			'post_status'    => 'any',
+		] );
+		if ( empty( $posts ) ) continue;
+
+		$post_id = $posts[0]->ID;
+		if ( get_post_meta( $post_id, '_fastfix_featured', true ) === '' ) {
+			update_post_meta( $post_id, '_fastfix_featured', '1' );
 		}
 	}
 }

@@ -3,14 +3,14 @@
  * Plugin Name: FastFix — Hascom
  * Plugin URI: https://fastfix.be
  * Description: Backend dédié à FastFix (enseigne réparation de Hascom Computer). Gère rendez-vous, catalogue d'appareils (photos incluses), fiches réparations (par famille ou par modèle exact) et produits reconditionnés. Totalement isolé du reste du site — menu "FastFix" dédié dans wp-admin.
- * Version: 1.4.0
+ * Version: 1.5.0
  * Author: FastFix / Hascom Computer
  * Text Domain: fastfix-hascom
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'FASTFIX_VERSION', '1.4.0' );
+define( 'FASTFIX_VERSION', '1.5.0' );
 define( 'FASTFIX_PATH', plugin_dir_path( __FILE__ ) );
 
 require_once FASTFIX_PATH . 'includes/cpt-booking.php';
@@ -43,6 +43,7 @@ register_activation_hook( __FILE__, function() {
 	fastfix_seed_default_devices();
 	fastfix_seed_default_refurbished();
 	fastfix_seed_featured_devices();
+	fastfix_seed_featured_repairs();
 	fastfix_retag_existing_media();
 } );
 
@@ -75,5 +76,9 @@ add_action( 'admin_init', function() {
 	if ( ! get_option( 'fastfix_media_retagged' ) ) {
 		fastfix_retag_existing_media();
 		update_option( 'fastfix_media_retagged', 1 );
+	}
+	if ( ! get_option( 'fastfix_repairs_featured_seeded' ) ) {
+		fastfix_seed_featured_repairs();
+		update_option( 'fastfix_repairs_featured_seeded', 1 );
 	}
 } );

@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import Navbar from "../components/Navbar";
 import DeviceGrid from "../components/DeviceGrid";
 import PopularDevices from "../components/PopularDevices";
+import PopularRepairs from "../components/PopularRepairs";
 import ReviewCarousel from "../components/ReviewCarousel";
 import FAQ from "../components/FAQ";
 import Footer from "../components/Footer.astro";
@@ -66,6 +67,19 @@ import "../styles/global.css";
         </a>
       </div>
       <PopularDevices client:load />
+    </div>
+  </section>
+
+  <!-- ═══════ RÉPARATIONS POPULAIRES ═══════ -->
+  <section class="py-16 lg:py-20 bg-bg-alt relative overflow-hidden">
+    <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
+      <div data-reveal class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
+        <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight">Réparations populaires</h2>
+        <a href="/rdv" class="text-sm font-semibold text-primary hover:underline inline-flex items-center gap-1.5">
+          Prendre rendez-vous →
+        </a>
+      </div>
+      <PopularRepairs client:load />
     </div>
   </section>
 

@@ -83,6 +83,7 @@ function fastfix_render_dashboard_page() {
 			<li><code><?php echo esc_html( rest_url( 'fastfix/v1/devices' ) ); ?></code> — GET, catalogue des modèles + photos</li>
 			<li><code><?php echo esc_html( rest_url( 'fastfix/v1/refurbished' ) ); ?></code> — GET, produits reconditionnés + photos</li>
 			<li><code><?php echo esc_html( rest_url( 'fastfix/v1/repairs' ) ); ?></code> — GET, fiches réparations (par famille, ou <code>?device_id=</code> pour un modèle précis)</li>
+			<li><code><?php echo esc_html( rest_url( 'fastfix/v1/repairs/featured' ) ); ?></code> — GET, réparations populaires (page d'accueil)</li>
 			<li><code><?php echo esc_html( rest_url( 'fastfix/v1/booking' ) ); ?></code> — POST, soumission d'une demande de RDV</li>
 		</ul>
 	</div>

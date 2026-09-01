@@ -45,7 +45,41 @@ add_action( 'rest_api_init', function() {
 			'device_id' => [ 'required' => false, 'sanitize_callback' => 'absint' ],
 		],
 	] );
+
+	register_rest_route( 'fastfix/v1', '/repairs/featured', [
+		'methods'             => 'GET',
+		'callback'            => 'fastfix_get_featured_repairs',
+		'permission_callback' => '__return_true',
+	] );
 } );
+
+/**
+ * Liste plate des réparations marquées "populaire", pour la section
+ * "Réparations populaires" de la page d'accueil.
+ */
+function fastfix_get_featured_repairs() {
+	$posts = get_posts( [
+		'post_type'      => 'fastfix_repair',
+		'post_status'    => 'publish',
+		'posts_per_page' => -1,
+		'orderby'        => 'menu_order',
+		'order'          => 'ASC',
+		'meta_key'       => '_fastfix_featured',
+		'meta_value'     => '1',
+	] );
+
+	$repairs = [];
+	foreach ( $posts as $post ) {
+		$repair           = fastfix_format_repair_post( $post );
+		$repair['icon']   = get_post_meta( $post->ID, '_fastfix_icon', true ) ?: '🔧';
+		$device_type      = get_post_meta( $post->ID, '_fastfix_device_type', true );
+		$type_labels      = fastfix_device_type_choices();
+		$repair['device'] = $type_labels[ $device_type ] ?? $device_type;
+		$repairs[]        = $repair;
+	}
+
+	return rest_ensure_response( $repairs );
+}
 
 /**
  * Catalogue des appareils — un modèle par entrée, avec photo (média WordPress).
