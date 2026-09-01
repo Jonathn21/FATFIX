@@ -10,7 +10,7 @@ const reviews = [
   {
     name: "Karim B.",
     date: "27 août 2026",
-    text: "Batterie de mon Samsung S23 changée rapidement. Le téléphone tient toute la journée maintenant. Merci Fastfix !",
+    text: "Batterie de mon Samsung S23 changée rapidement. Le téléphone tient toute la journée maintenant. Merci FastFix !",
     stars: 5,
   },
   {

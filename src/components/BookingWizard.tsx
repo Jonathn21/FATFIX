@@ -285,7 +285,7 @@ export default function BookingWizard() {
       <div className="gradient-hero text-white py-10 px-6">
         <div className="mx-auto max-w-3xl">
           <span className="inline-block rounded-md bg-primary text-white text-xs font-bold uppercase tracking-wider px-3 py-1 mb-4">
-            Fastfix · Bruxelles
+            FastFix · Bruxelles
           </span>
           <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
             Planifiez votre réparation

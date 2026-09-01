@@ -5,7 +5,7 @@ import Footer from "../components/Footer.astro";
 import "../styles/global.css";
 ---
 
-<Layout title="À propos — Fastfix">
+<Layout title="À propos — FastFix">
   <Navbar client:load />
 
   <!-- Hero -->
@@ -19,7 +19,7 @@ import "../styles/global.css";
         Passionnés de tech,<br/>experts de la réparation
       </h1>
       <p data-reveal class="mt-5 text-white/60 text-lg max-w-2xl mx-auto">
-        Depuis 2019, notre équipe de techniciens certifiés redonne vie à vos appareils. Rapidement, proprement, durablement.
+        Depuis 2002, notre équipe de techniciens certifiés redonne vie à vos appareils. Rapidement, proprement, durablement.
       </p>
     </div>
   </section>
@@ -28,10 +28,10 @@ import "../styles/global.css";
   <section class="relative -mt-10 z-10 mx-auto max-w-4xl px-6 lg:px-8">
     <div data-reveal-children class="grid grid-cols-2 md:grid-cols-4 gap-4">
       {[
-        { value: "10 000+", label: "Appareils réparés" },
+        { value: "30 000+", label: "Appareils réparés" },
         { value: "98%", label: "Clients satisfaits" },
-        { value: "15", label: "Techniciens" },
-        { value: "2", label: "Boutiques en Belgique" },
+        { value: "20+", label: "Années d'expérience" },
+        { value: "1", label: "Boutique à Bruxelles" },
       ].map((stat) => (
         <div class="card p-6 text-center">
           <span class="font-display text-2xl sm:text-3xl font-bold text-primary">{stat.value}</span>
@@ -50,10 +50,10 @@ import "../styles/global.css";
           <h2 class="font-display text-2xl sm:text-3xl font-bold mb-6">De la passion à l'expertise</h2>
           <div class="space-y-4 text-text-muted leading-relaxed">
             <p>
-              Fastfix est né d'un constat simple : faire réparer son smartphone en Belgique était trop cher, trop lent, et trop opaque. En 2019, nous avons ouvert notre premier atelier à Bruxelles avec un objectif clair — offrir des réparations de qualité, rapides et à prix juste.
+              FastFix, c'est l'enseigne réparation de Hascom Computer. Depuis 2002, nous sommes installés à Schaerbeek avec un objectif clair — offrir des réparations de qualité, rapides et à prix juste.
             </p>
             <p>
-              Aujourd'hui, avec deux boutiques et une quinzaine de techniciens, nous traitons plus de 10 000 appareils par an. Chaque pièce est testée, chaque intervention est garantie. Nous investissons continuellement dans la formation et les outils pour rester à la pointe : micro-soudure, diagnostic carte mère, réparation de composants CMS.
+              Avec plus de 30 000 réparations à notre actif, nous traitons smartphones, tablettes, ordinateurs, consoles et montres connectées. Chaque pièce est testée, chaque intervention est garantie. Nous investissons continuellement dans la formation et les outils pour rester à la pointe : micro-soudure, diagnostic carte mère, réparation de composants CMS.
             </p>
             <p>
               Notre philosophie n'a pas changé : transparence, rapidité, et un service client qui fait la différence.
@@ -61,7 +61,7 @@ import "../styles/global.css";
           </div>
         </div>
         <div data-reveal class="grid grid-cols-2 gap-4">
-          <img src="/images/media/store-front.jpg" alt="Boutique Fastfix" class="rounded-2xl w-full h-48 object-cover" loading="lazy" />
+          <img src="/images/media/store-front.jpg" alt="Boutique FastFix" class="rounded-2xl w-full h-48 object-cover" loading="lazy" />
           <img src="/images/media/micro-soldering.jpg" alt="Micro-soudure" class="rounded-2xl w-full h-48 object-cover mt-8" loading="lazy" />
           <img src="/images/media/repair-closeup.jpg" alt="Réparation" class="rounded-2xl w-full h-48 object-cover" loading="lazy" />
           <img src="/images/media/store-counter.jpg" alt="Comptoir" class="rounded-2xl w-full h-48 object-cover mt-8" loading="lazy" />
@@ -99,10 +99,10 @@ import "../styles/global.css";
 
   <!-- Team photo break -->
   <section class="relative h-64 lg:h-80 overflow-hidden">
-    <img src="/images/media/workshop.jpg" alt="L'atelier Fastfix" class="w-full h-full object-cover" />
+    <img src="/images/media/workshop.jpg" alt="L'atelier FastFix" class="w-full h-full object-cover" />
     <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end">
       <div class="mx-auto max-w-7xl px-6 lg:px-8 pb-8 w-full">
-        <p class="font-display text-white text-xl font-bold">Notre atelier — le cœur de Fastfix</p>
+        <p class="font-display text-white text-xl font-bold">Notre atelier — le cœur de FastFix</p>
       </div>
     </div>
   </section>

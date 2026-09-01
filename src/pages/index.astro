@@ -21,7 +21,7 @@ import "../styles/global.css";
       <div class="grid lg:grid-cols-2 gap-10 items-center">
         <div>
           <h1 data-reveal class="font-display text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight leading-[1.1]">
-            Réparation iPhone &amp; Samsung à Bruxelles &amp; Liège
+            Réparation iPhone &amp; Samsung à Bruxelles
           </h1>
           <p data-reveal class="mt-5 text-lg text-white/80 max-w-lg leading-relaxed">
             Pièces originales, prix transparents et généralement prêt en moins de 60 minutes.
@@ -40,7 +40,7 @@ import "../styles/global.css";
           </a>
         </div>
         <div data-reveal class="relative hidden lg:flex items-center justify-center">
-          <img src="/images/media/hero-devices.png" alt="iPhone, Samsung, MacBook, iPad, PS5, Xbox et outils de réparation Fastfix" class="w-full max-w-xl object-contain drop-shadow-2xl" />
+          <img src="/images/media/hero-devices.png" alt="iPhone, Samsung, MacBook, iPad, PS5, Xbox et outils de réparation FastFix" class="w-full max-w-xl object-contain drop-shadow-2xl" />
         </div>
       </div>
     </div>
@@ -145,7 +145,7 @@ import "../styles/global.css";
     <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
       <div class="grid lg:grid-cols-2 gap-10 items-center" data-reveal>
         <div class="rounded-2xl overflow-hidden">
-          <img src="/images/media/store-front.jpg" alt="Boutique Fastfix" class="w-full h-full object-cover aspect-[4/3]" loading="lazy" />
+          <img src="/images/media/store-front.jpg" alt="Boutique FastFix" class="w-full h-full object-cover aspect-[4/3]" loading="lazy" />
         </div>
         <div>
           <h2 class="font-display text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight">De vrais magasins, de vrais spécialistes</h2>
@@ -194,7 +194,7 @@ import "../styles/global.css";
               </div>
               <h3 class="font-display text-xl font-bold">En magasin</h3>
             </div>
-            <p class="text-text-muted text-sm leading-relaxed mb-4">Deux magasins : Bruxelles et Liège. Souvent prêt pendant que vous attendez.</p>
+            <p class="text-text-muted text-sm leading-relaxed mb-4">Notre magasin à Schaerbeek, Bruxelles. Souvent prêt pendant que vous attendez.</p>
             <a href="/rdv" class="inline-flex items-center gap-2 rounded-full bg-primary hover:bg-primary-dark px-5 py-2.5 text-sm font-semibold text-white transition-colors">Prendre rendez-vous</a>
           </div>
         </div>
@@ -223,7 +223,7 @@ import "../styles/global.css";
   <!-- ═══════ PLUTÔT VENDRE QUE RÉPARER ? ═══════ -->
   <section class="py-10">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
-      <div data-reveal class="rounded-2xl bg-emerald-50 border border-emerald-100 p-8 lg:p-10 flex flex-col md:flex-row items-center gap-8">
+      <div data-reveal class="rounded-2xl bg-primary/5 border border-primary/15 p-8 lg:p-10 flex flex-col md:flex-row items-center gap-8">
         <div class="flex items-center gap-3 flex-shrink-0">
           <img src="/images/devices/iphone-17-pro-max.webp" alt="" class="h-32 object-contain -rotate-6" />
           <img src="/images/devices/iphone-17.webp" alt="" class="h-36 object-contain rotate-3" />
@@ -245,11 +245,10 @@ import "../styles/global.css";
   <section class="py-16 lg:py-20 relative overflow-hidden">
     <div class="orb orb-purple" style="width:300px;height:300px;top:-60px;left:30%;"></div>
     <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
-      <h2 data-reveal class="font-display text-2xl sm:text-3xl font-bold text-center mb-10">Nos magasins</h2>
-      <div data-reveal-children class="grid md:grid-cols-2 gap-6">
+      <h2 data-reveal class="font-display text-2xl sm:text-3xl font-bold text-center mb-10">Notre magasin</h2>
+      <div data-reveal-children class="max-w-lg mx-auto">
         {[
-          { name: "Fastfix Bruxelles", status: "Fermé", nextOpen: "lun 10:00", address: "Rue de la Réparation 42, 1000 Bruxelles", phone: "+32 400 00 00 01", img: "/images/media/store-front.jpg" },
-          { name: "Fastfix Liège", status: "Fermé", nextOpen: "lun 10:00", address: "Rue du Tech 15, 4000 Liège", phone: "+32 400 00 00 02", img: "/images/media/store-counter.jpg" },
+          { name: "FastFix Bruxelles", status: "Fermé", nextOpen: "lun 10:00", address: "Chaussée de Haecht 163, 1030 Schaerbeek", phone: "02 219 49 16", phoneFull: "+3222194916", img: "/images/media/store-front.jpg" },
         ].map((store) => (
           <div class="card overflow-hidden group">
             <div class="aspect-video overflow-hidden relative">
@@ -268,7 +267,7 @@ import "../styles/global.css";
                 </div>
                 <div class="flex items-center gap-2">
                   <svg class="h-4 w-4 text-primary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
-                  <a href={`tel:${store.phone.replace(/\s/g,"")}`} class="hover:text-primary transition-colors font-medium">{store.phone}</a>
+                  <a href={`tel:${store.phoneFull}`} class="hover:text-primary transition-colors font-medium">{store.phone}</a>
                 </div>
               </div>
               <a href="/boutiques" class="inline-flex items-center gap-2 rounded-full border border-border hover:border-primary px-4 py-2 text-xs font-medium text-text-muted hover:text-primary transition-all">
@@ -374,7 +373,7 @@ import "../styles/global.css";
         <a href="/envoi" class="inline-flex items-center gap-2 rounded-full bg-white/15 border border-white/30 hover:bg-white/25 px-7 py-3.5 text-base font-semibold text-white transition-all">
           Envoyez-le
         </a>
-        <a href="tel:+32400000001" class="text-sm text-white/70 hover:text-white transition-colors self-center">ou appelez le</a>
+        <a href="tel:+3222194916" class="text-sm text-white/70 hover:text-white transition-colors self-center">ou appelez le</a>
       </div>
     </div>
   </section>
