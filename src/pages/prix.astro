@@ -2,62 +2,43 @@
 import Layout from "../layouts/Layout.astro";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer.astro";
+import PriceCards from "../components/PriceCards";
+import PriceGrid from "../components/PriceGrid";
+import ContentList from "../components/ContentList";
 import "../styles/global.css";
 
-const popular = [
-  { repair: "Écran iPhone 16", img: "/images/devices/iphone-16.webp", time: "± 1h", warranty: "12 mois", price: 179 },
-  { repair: "Batterie iPhone 17 Pro", img: "/images/devices/iphone-17-pro.webp", time: "± 1h", warranty: "6 mois", price: 109 },
-  { repair: "Écran Galaxy S26 Ultra", img: "/images/devices/galaxy-s26-ultra.webp", time: "± 1.5h", warranty: "12 mois", price: 289 },
-  { repair: "Batterie iPhone 16 Pro Max", img: "/images/devices/iphone-16-pro-max.webp", time: "± 1h", warranty: "6 mois", price: 99 },
-  { repair: "Écran iPad Pro M5", img: "/images/devices/ipad-pro-m5.webp", time: "± 2h", warranty: "12 mois", price: 349 },
-  { repair: "Vitre arrière iPhone 17", img: "/images/devices/iphone-17.webp", time: "± 1h", warranty: "12 mois", price: 79 },
-  { repair: "Batterie Galaxy S24", img: "/images/devices/galaxy-s24.webp", time: "± 1h", warranty: "6 mois", price: 89 },
-  { repair: "Écran MacBook Air M4", img: "/images/devices/macbook-air.webp", time: "± 3h", warranty: "12 mois", price: 399 },
-];
+// Images livrées avec le site, conservées comme repli quand un modèle n'a pas
+// encore de photo dans le catalogue WordPress (FastFix → Appareils).
+const POPULAR_IMAGES: Record<string, string> = {
+  "Écran iPhone 16": "/images/devices/iphone-16.webp",
+  "Batterie iPhone 17 Pro": "/images/devices/iphone-17-pro.webp",
+  "Écran Galaxy S26 Ultra": "/images/devices/galaxy-s26-ultra.webp",
+  "Batterie iPhone 16 Pro Max": "/images/devices/iphone-16-pro-max.webp",
+  "Écran iPad Pro M5": "/images/devices/ipad-pro-m5.webp",
+  "Vitre arrière iPhone 17": "/images/devices/iphone-17.webp",
+  "Batterie Galaxy S24": "/images/devices/galaxy-s24.webp",
+  "Écran MacBook Air M4": "/images/devices/macbook-air.webp",
+};
 
-const categories = [
-  {
-    name: "iPhone",
-    brandLogo: "/images/brands/apple.svg",
-    repairs: [
-      { model: "iPhone 17 Pro Max", img: "/images/devices/iphone-17-pro-max.webp", screen: 249, battery: 109, back: 89, camera: 149 },
-      { model: "iPhone 17 Pro", img: "/images/devices/iphone-17-pro.webp", screen: 229, battery: 109, back: 89, camera: 139 },
-      { model: "iPhone 17", img: "/images/devices/iphone-17.webp", screen: 199, battery: 99, back: 79, camera: 119 },
-      { model: "iPhone 16 Pro Max", img: "/images/devices/iphone-16-pro-max.webp", screen: 219, battery: 99, back: 79, camera: 129 },
-      { model: "iPhone 16", img: "/images/devices/iphone-16.webp", screen: 179, battery: 89, back: 69, camera: 109 },
-    ],
-  },
-  {
-    name: "Samsung Galaxy",
-    brandLogo: "/images/brands/samsung.svg",
-    repairs: [
-      { model: "Galaxy S26 Ultra", img: "/images/devices/galaxy-s26-ultra.webp", screen: 289, battery: 119, back: 89, camera: 159 },
-      { model: "Galaxy S26+", img: "/images/devices/galaxy-s26-plus.webp", screen: 249, battery: 109, back: 79, camera: 139 },
-      { model: "Galaxy S26", img: "/images/devices/galaxy-s26.webp", screen: 229, battery: 99, back: 79, camera: 129 },
-      { model: "Galaxy S24", img: "/images/devices/galaxy-s24.webp", screen: 199, battery: 89, back: 69, camera: 109 },
-      { model: "Galaxy S23 Ultra", img: "/images/devices/galaxy-s23-ultra.webp", screen: 219, battery: 99, back: 69, camera: 129 },
-    ],
-  },
-  {
-    name: "iPad & MacBook",
-    brandLogo: "/images/brands/apple.svg",
-    repairs: [
-      { model: "iPad Pro 13\" M5", img: "/images/devices/ipad-pro-m5.webp", screen: 349, battery: 149, back: null, camera: 129 },
-      { model: "iPad Pro 13\" M4", img: "/images/devices/ipad-pro.webp", screen: 329, battery: 139, back: null, camera: 119 },
-      { model: "MacBook Air M4", img: "/images/devices/macbook-air.webp", screen: 399, battery: 199, back: null, camera: null },
-    ],
-  },
-  {
-    name: "Autres appareils",
-    brandLogo: null,
-    repairs: [
-      { model: "Apple Watch", img: "/images/devices/apple-watch.webp", screen: 149, battery: 89, back: null, camera: null },
-      { model: "Galaxy Tab S10+", img: "/images/devices/galaxy-tab.webp", screen: 249, battery: 119, back: null, camera: null },
-      { model: "PS5", img: "/images/devices/ps5.webp", screen: null, battery: null, back: null, camera: null },
-      { model: "Xbox Series X", img: "/images/devices/xbox-series-x.webp", screen: null, battery: null, back: null, camera: null },
-    ],
-  },
-];
+const MODEL_IMAGES: Record<string, string> = {
+  "iPhone 17 Pro Max": "/images/devices/iphone-17-pro-max.webp",
+  "iPhone 17 Pro": "/images/devices/iphone-17-pro.webp",
+  "iPhone 17": "/images/devices/iphone-17.webp",
+  "iPhone 16 Pro Max": "/images/devices/iphone-16-pro-max.webp",
+  "iPhone 16": "/images/devices/iphone-16.webp",
+  "Galaxy S26 Ultra": "/images/devices/galaxy-s26-ultra.webp",
+  "Galaxy S26+": "/images/devices/galaxy-s26-plus.webp",
+  "Galaxy S26": "/images/devices/galaxy-s26.webp",
+  "Galaxy S24": "/images/devices/galaxy-s24.webp",
+  "Galaxy S23 Ultra": "/images/devices/galaxy-s23-ultra.webp",
+  "iPad Pro 13\" M5": "/images/devices/ipad-pro-m5.webp",
+  "iPad Pro 13\" M4": "/images/devices/ipad-pro.webp",
+  "MacBook Air M4": "/images/devices/macbook-air.webp",
+  "Apple Watch": "/images/devices/apple-watch.webp",
+  "Galaxy Tab S10+": "/images/devices/galaxy-tab.webp",
+  "PS5": "/images/devices/ps5.webp",
+  "Xbox Series X": "/images/devices/xbox-series-x.webp",
+};
 ---
 
 <Layout title="Tous les prix — Réparations iPhone, Samsung & plus | FastFix">
@@ -68,13 +49,13 @@ const categories = [
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="grid md:grid-cols-2 gap-10 items-center" data-reveal>
         <div>
-          <h1 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">Nos tarifs</h1>
-          <p class="mt-4 text-text-muted text-lg leading-relaxed">
+          <h1 data-ff-content="prix.hero.title" class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">Nos tarifs</h1>
+          <p data-ff-content="prix.hero.text" class="mt-4 text-text-muted text-lg leading-relaxed">
             Prix fixes, transparents, affichés avant intervention. Pièces certifiées et garantie incluse sur chaque réparation.
           </p>
           <div class="flex flex-wrap gap-4 mt-6">
-            <a href="/rdv" class="inline-flex items-center gap-2 rounded-full bg-primary hover:bg-primary-dark px-6 py-3 text-sm font-semibold text-white transition-colors">Prendre rendez-vous</a>
-            <a href="/contact" class="inline-flex items-center gap-2 rounded-full border border-border hover:border-primary px-6 py-3 text-sm font-medium text-text hover:text-primary transition-colors">Devis personnalisé</a>
+            <a href="/rdv" class="inline-flex items-center gap-2 rounded-full bg-primary hover:bg-primary-dark px-6 py-3 text-sm font-semibold text-white transition-colors"><span data-ff-content="prix.hero.cta_primary">Prendre rendez-vous</span></a>
+            <a href="/contact" class="inline-flex items-center gap-2 rounded-full border border-border hover:border-primary px-6 py-3 text-sm font-medium text-text hover:text-primary transition-colors"><span data-ff-content="prix.hero.cta_secondary">Devis personnalisé</span></a>
           </div>
         </div>
         <div class="flex justify-center gap-2 sm:gap-3">
@@ -108,106 +89,60 @@ const categories = [
   <!-- Popular repairs with images -->
   <section class="py-16">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
-      <h2 data-reveal class="font-display text-2xl font-bold mb-8">Réparations populaires</h2>
-      <div data-reveal-children class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {popular.map((r) => (
-          <div class="card group overflow-hidden">
-            <div class="aspect-square bg-bg-alt p-6 flex items-center justify-center">
-              <img src={r.img} alt={r.repair} class="h-32 w-auto object-contain transition-transform duration-300 group-hover:scale-105" loading="lazy" />
-            </div>
-            <div class="p-5">
-              <h3 class="font-display font-bold text-sm mb-2">{r.repair}</h3>
-              <div class="flex items-center gap-2 mb-3">
-                <span class="badge badge-purple text-xs">
-                  <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                  {r.time}
-                </span>
-                <span class="badge badge-green text-xs">
-                  <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
-                  {r.warranty}
-                </span>
-              </div>
-              <div class="flex items-center justify-between">
-                <span class="font-display text-xl font-bold text-primary">€ {r.price}</span>
-                <a href="/rdv" class="text-xs font-semibold text-primary hover:underline">Réserver →</a>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      <h2 data-reveal class="font-display text-2xl font-bold mb-8" data-ff-content="prix.sections.popular_title">Réparations populaires</h2>
+      <PriceCards
+        images={POPULAR_IMAGES}
+        fallback={[
+          ["Écran iPhone 16", "± 1h", "12 mois", "179"],
+          ["Batterie iPhone 17 Pro", "± 1h", "6 mois", "109"],
+          ["Écran Galaxy S26 Ultra", "± 1.5h", "12 mois", "289"],
+          ["Batterie iPhone 16 Pro Max", "± 1h", "6 mois", "99"],
+          ["Écran iPad Pro M5", "± 2h", "12 mois", "349"],
+          ["Vitre arrière iPhone 17", "± 1h", "12 mois", "79"],
+          ["Batterie Galaxy S24", "± 1h", "6 mois", "89"],
+          ["Écran MacBook Air M4", "± 3h", "12 mois", "399"],
+        ]}
+        client:load
+      />
     </div>
   </section>
 
   <!-- Category tables with device images -->
   <section class="py-16 bg-bg-alt">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
-      <h2 data-reveal class="font-display text-2xl font-bold mb-10">Tous les tarifs par catégorie</h2>
+      <h2 data-reveal class="font-display text-2xl font-bold mb-10" data-ff-content="prix.sections.all_title">Tous les tarifs par catégorie</h2>
 
-      {categories.map((cat) => (
-        <div class="mb-14" data-reveal>
-          <div class="flex items-center gap-3 mb-6">
-            {cat.brandLogo && <img src={cat.brandLogo} alt="" class="h-6 opacity-50" style="filter: brightness(0);" />}
-            <h3 class="font-display text-xl font-bold">{cat.name}</h3>
-          </div>
-
-          <!-- Card grid for each model -->
-          <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-            {cat.repairs.map((r) => (
-              <div class="card overflow-hidden">
-                <div class="bg-white p-4 flex items-center justify-center h-36">
-                  <img src={r.img} alt={r.model} class="h-28 w-auto object-contain" loading="lazy" />
-                </div>
-                <div class="p-4 bg-bg-alt border-t border-border">
-                  <h4 class="font-display font-bold text-sm mb-3">{r.model}</h4>
-                  <div class="space-y-2 text-xs">
-                    {r.screen && (
-                      <div class="flex items-center justify-between">
-                        <span class="text-text-muted flex items-center gap-1.5">
-                          <svg class="h-3 w-3 text-primary" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><rect x="5" y="2" width="14" height="20" rx="2"/></svg>
-                          Écran
-                        </span>
-                        <span class="font-display font-bold text-primary">€ {r.screen}</span>
-                      </div>
-                    )}
-                    {r.battery && (
-                      <div class="flex items-center justify-between">
-                        <span class="text-text-muted flex items-center gap-1.5">
-                          <svg class="h-3 w-3 text-primary" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><rect x="6" y="7" width="12" height="10" rx="1"/><line x1="10" y1="7" x2="10" y2="4"/><line x1="14" y1="7" x2="14" y2="4"/></svg>
-                          Batterie
-                        </span>
-                        <span class="font-display font-bold text-primary">€ {r.battery}</span>
-                      </div>
-                    )}
-                    {r.back && (
-                      <div class="flex items-center justify-between">
-                        <span class="text-text-muted flex items-center gap-1.5">
-                          <svg class="h-3 w-3 text-primary" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><rect x="4" y="2" width="16" height="20" rx="2"/></svg>
-                          Vitre arr.
-                        </span>
-                        <span class="font-display font-bold text-primary">€ {r.back}</span>
-                      </div>
-                    )}
-                    {r.camera && (
-                      <div class="flex items-center justify-between">
-                        <span class="text-text-muted flex items-center gap-1.5">
-                          <svg class="h-3 w-3 text-primary" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><circle cx="12" cy="12" r="3"/></svg>
-                          Caméra
-                        </span>
-                        <span class="font-display font-bold text-primary">€ {r.camera}</span>
-                      </div>
-                    )}
-                    {!r.screen && !r.battery && (
-                      <div class="text-center py-1">
-                        <a href="/contact" class="text-primary font-semibold hover:underline">Devis sur demande</a>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
+      <PriceGrid
+        images={MODEL_IMAGES}
+        fallback={[
+          { name: "iPhone", logo: "/images/brands/apple.svg", rows: [
+            ["iPhone 17 Pro Max", "249", "109", "89", "149"],
+            ["iPhone 17 Pro", "229", "109", "89", "139"],
+            ["iPhone 17", "199", "99", "79", "119"],
+            ["iPhone 16 Pro Max", "219", "99", "79", "129"],
+            ["iPhone 16", "179", "89", "69", "109"],
+          ]},
+          { name: "Samsung Galaxy", logo: "/images/brands/samsung.svg", rows: [
+            ["Galaxy S26 Ultra", "289", "119", "89", "159"],
+            ["Galaxy S26+", "249", "109", "79", "139"],
+            ["Galaxy S26", "229", "99", "79", "129"],
+            ["Galaxy S24", "199", "89", "69", "109"],
+            ["Galaxy S23 Ultra", "219", "99", "69", "129"],
+          ]},
+          { name: "iPad & MacBook", logo: "/images/brands/apple.svg", rows: [
+            ["iPad Pro 13\" M5", "349", "149", "", "129"],
+            ["iPad Pro 13\" M4", "329", "139", "", "119"],
+            ["MacBook Air M4", "399", "199", "", ""],
+          ]},
+          { name: "Autres appareils", logo: null, rows: [
+            ["Apple Watch", "149", "89", "", ""],
+            ["Galaxy Tab S10+", "249", "119", "", ""],
+            ["PS5", "", "", "", ""],
+            ["Xbox Series X", "", "", "", ""],
+          ]},
+        ]}
+        client:load
+      />
     </div>
   </section>
 
@@ -215,37 +150,32 @@ const categories = [
   <section class="py-16">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="text-center mb-10" data-reveal>
-        <h2 class="font-display text-2xl font-bold">Autres réparations</h2>
-        <p class="mt-3 text-text-muted">Tarifs indicatifs pour les interventions spécifiques.</p>
+        <h2 class="font-display text-2xl font-bold" data-ff-content="prix.sections.other_title">Autres réparations</h2>
+        <p data-ff-content="prix.other.subtitle" class="mt-3 text-text-muted">Tarifs indicatifs pour les interventions spécifiques.</p>
       </div>
-      <div data-reveal-children class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
-        {[
-          { repair: "Connecteur de charge", price: "49 – 89 €", time: "± 1h" },
-          { repair: "Haut-parleur", price: "39 – 69 €", time: "± 45 min" },
-          { repair: "Micro", price: "39 – 69 €", time: "± 45 min" },
-          { repair: "Face ID (iPhone)", price: "129 – 179 €", time: "± 1.5h" },
-          { repair: "Bouton power / volume", price: "39 – 59 €", time: "± 1h" },
-          { repair: "Nettoyage oxydation", price: "59 – 99 €", time: "± 2h" },
-          { repair: "Antenne / WiFi", price: "49 – 89 €", time: "± 1h" },
-          { repair: "Carte mère (diagnostic)", price: "à partir de 99 €", time: "± 2-5 jours" },
-          { repair: "Micro-soudure", price: "à partir de 79 €", time: "± 1-3 jours" },
-        ].map((r) => (
-          <div class="flex items-center justify-between p-4 rounded-xl border border-border bg-white hover:border-primary/30 transition-colors">
-            <div>
-              <span class="font-display font-semibold text-sm text-text">{r.repair}</span>
-              <span class="block text-xs text-text-muted mt-0.5">{r.time}</span>
-            </div>
-            <span class="font-display font-bold text-sm text-primary whitespace-nowrap">{r.price}</span>
-          </div>
-        ))}
-      </div>
+      <ContentList
+        contentKey="prix.other.items"
+        variant="priceRows"
+        fallback={[
+          ["Connecteur de charge", "49 – 89 €", "± 1h"],
+          ["Haut-parleur", "39 – 69 €", "± 45 min"],
+          ["Micro", "39 – 69 €", "± 45 min"],
+          ["Face ID (iPhone)", "129 – 179 €", "± 1.5h"],
+          ["Bouton power / volume", "39 – 59 €", "± 1h"],
+          ["Nettoyage oxydation", "59 – 99 €", "± 2h"],
+          ["Antenne / WiFi", "49 – 89 €", "± 1h"],
+          ["Carte mère (diagnostic)", "à partir de 99 €", "± 2-5 jours"],
+          ["Micro-soudure", "à partir de 79 €", "± 1-3 jours"],
+        ]}
+        client:load
+      />
     </div>
   </section>
 
   <!-- CTA -->
   <section class="py-16 bg-bg-dark text-white">
     <div class="mx-auto max-w-3xl px-6 lg:px-8 text-center" data-reveal>
-      <h2 class="font-display text-2xl sm:text-3xl font-bold">Votre modèle n'est pas listé ?</h2>
+      <h2 class="font-display text-2xl sm:text-3xl font-bold" data-ff-content="prix.sections.not_listed_title">Votre modèle n'est pas listé ?</h2>
       <p class="mt-4 text-white/60">Nous réparons bien plus que ce qui est affiché. Contactez-nous pour un devis gratuit et sans engagement.</p>
       <div class="mt-6 flex flex-wrap justify-center gap-4">
         <a href="/contact" class="inline-flex items-center gap-2 rounded-full bg-primary hover:bg-primary-dark px-7 py-3.5 text-sm font-semibold text-white transition-colors">Demander un devis</a>

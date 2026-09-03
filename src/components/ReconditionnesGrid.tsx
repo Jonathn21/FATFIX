@@ -44,7 +44,16 @@ export default function ReconditionnesGrid() {
       .then((res) => (res.ok ? res.json() : Promise.reject(res)))
       .then((data: RefurbishedProduct[]) => {
         if (Array.isArray(data) && data.length > 0) {
-          setProducts(data.map((p) => ({ ...p, image: p.image || "/images/devices/iphone-16.webp" })));
+          setProducts(
+            data.map((p) => ({
+              ...p,
+              // Repli sur la photo d'origine du même produit avant tout générique
+              image:
+                p.image ||
+                fallbackProducts.find((f) => f.name === p.name)?.image ||
+                "/images/devices/iphone-16.webp",
+            }))
+          );
         }
       })
       .catch(() => {});

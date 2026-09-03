@@ -3,18 +3,19 @@
  * Plugin Name: FastFix — Hascom
  * Plugin URI: https://fastfix.be
  * Description: Gestion complète du site FastFix depuis WordPress : rendez-vous, catalogue d'appareils avec photos, fiches réparations (par famille ou modèle exact), produits reconditionnés, avis clients, FAQ, grille de tarifs et coordonnées de l'entreprise. Menu "FastFix" dédié, totalement isolé du reste du site.
- * Version: 2.0.0
+ * Version: 2.3.0
  * Author: FastFix / Hascom Computer
  * Text Domain: fastfix-hascom
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'FASTFIX_VERSION', '2.0.0' );
+define( 'FASTFIX_VERSION', '2.3.0' );
 define( 'FASTFIX_PATH', plugin_dir_path( __FILE__ ) );
 
 /* Réglages en premier : les autres modules s'appuient sur ses helpers. */
 require_once FASTFIX_PATH . 'includes/settings.php';
+require_once FASTFIX_PATH . 'includes/content.php';
 
 /* Contenus */
 require_once FASTFIX_PATH . 'includes/cpt-booking.php';
@@ -23,6 +24,7 @@ require_once FASTFIX_PATH . 'includes/cpt-device.php';
 require_once FASTFIX_PATH . 'includes/cpt-refurbished.php';
 require_once FASTFIX_PATH . 'includes/cpt-review.php';
 require_once FASTFIX_PATH . 'includes/cpt-faq.php';
+require_once FASTFIX_PATH . 'includes/cpt-category.php';
 
 /* Outils */
 require_once FASTFIX_PATH . 'includes/image-import.php';
@@ -54,6 +56,7 @@ function fastfix_run_setup() {
 	fastfix_seed_default_refurbished();
 	fastfix_seed_default_reviews();
 	fastfix_seed_default_faq();
+	fastfix_seed_default_categories();
 	fastfix_seed_featured_devices();
 	fastfix_seed_featured_repairs();
 	fastfix_retag_existing_media();
@@ -66,6 +69,7 @@ register_activation_hook( __FILE__, function() {
 	fastfix_register_refurbished_cpt();
 	fastfix_register_review_cpt();
 	fastfix_register_faq_cpt();
+	fastfix_register_category_cpt();
 	flush_rewrite_rules();
 
 	fastfix_run_setup();

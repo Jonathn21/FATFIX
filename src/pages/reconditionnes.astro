@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer.astro";
 import ReconditionnesGrid from "../components/ReconditionnesGrid";
+import ContentList from "../components/ContentList";
 import "../styles/global.css";
 ---
 
@@ -13,28 +14,26 @@ import "../styles/global.css";
   <section class="py-16 lg:py-20 bg-bg-alt">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="max-w-3xl" data-reveal>
-        <span class="badge badge-purple mb-4">Reconditionnés par FastFix</span>
-        <h1 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
+        <span data-ff-content="reconditionnes.hero.badge" class="badge badge-purple mb-4">Reconditionnés par FastFix</span>
+        <h1 data-ff-content="reconditionnes.hero.title" class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
           Smartphones reconditionnés,<br/>garantis 12 mois
         </h1>
-        <p class="mt-5 text-text-muted text-lg max-w-2xl">
+        <p data-ff-content="reconditionnes.hero.text" class="mt-5 text-text-muted text-lg max-w-2xl">
           Reconditionnés par nos techniciens, testés sur 30 points de contrôle. Comme neufs, sans le prix du neuf.
         </p>
       </div>
 
       <!-- Grades explained -->
-      <div data-reveal-children class="mt-10 grid sm:grid-cols-3 gap-4 max-w-2xl">
-        {[
-          { grade: "A+", desc: "Excellent état — aucune trace visible, batterie > 95%" },
-          { grade: "A", desc: "Très bon état — micro-rayures invisibles en usage, batterie > 90%" },
-          { grade: "B+", desc: "Bon état — légères traces d'usure, batterie > 85%" },
-        ].map((g) => (
-          <div class="flex items-start gap-3 bg-white rounded-xl p-4 border border-border">
-            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 font-display font-bold text-primary text-xs flex-shrink-0">{g.grade}</span>
-            <span class="text-xs text-text-muted leading-relaxed">{g.desc}</span>
-          </div>
-        ))}
-      </div>
+      <ContentList
+        contentKey="reconditionnes.lists.grades"
+        variant="grades"
+        fallback={[
+          ["A+", "Excellent état — aucune trace visible, batterie > 95%"],
+          ["A", "Très bon état — micro-rayures invisibles en usage, batterie > 90%"],
+          ["B+", "Bon état — légères traces d'usure, batterie > 85%"],
+        ]}
+        client:load
+      />
     </div>
   </section>
 
@@ -68,23 +67,20 @@ import "../styles/global.css";
   <section class="py-20 bg-bg-alt">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="text-center mb-14" data-reveal>
-        <h2 class="font-display text-2xl sm:text-3xl font-bold">Notre processus de reconditionnement</h2>
+        <h2 class="font-display text-2xl sm:text-3xl font-bold" data-ff-content="reconditionnes.sections.process_title">Notre processus de reconditionnement</h2>
       </div>
-      <div data-reveal-children class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        {[
-          { step: "1", title: "Réception", desc: "L'appareil est reçu et inspecté visuellement" },
-          { step: "2", title: "Diagnostic", desc: "Test complet de tous les composants (30 points)" },
-          { step: "3", title: "Réparation", desc: "Remplacement des pièces usées ou défectueuses" },
-          { step: "4", title: "Nettoyage", desc: "Nettoyage professionnel intérieur et extérieur" },
-          { step: "5", title: "Certification", desc: "Tests finaux, grade attribué, garantie activée" },
-        ].map((item) => (
-          <div class="card p-5 text-center relative">
-            <div class="absolute -top-3 left-1/2 -translate-x-1/2 flex h-7 w-7 items-center justify-center rounded-full bg-primary text-white font-display font-bold text-xs">{item.step}</div>
-            <h3 class="font-display text-sm font-bold mb-1 mt-3">{item.title}</h3>
-            <p class="text-xs text-text-muted">{item.desc}</p>
-          </div>
-        ))}
-      </div>
+      <ContentList
+        contentKey="reconditionnes.lists.process"
+        variant="steps"
+        fallback={[
+          ["Réception", "L'appareil est reçu et inspecté visuellement"],
+          ["Diagnostic", "Test complet de tous les composants (30 points)"],
+          ["Réparation", "Remplacement des pièces usées ou défectueuses"],
+          ["Nettoyage", "Nettoyage professionnel intérieur et extérieur"],
+          ["Certification", "Tests finaux, grade attribué, garantie activée"],
+        ]}
+        client:load
+      />
     </div>
   </section>
 
@@ -92,7 +88,7 @@ import "../styles/global.css";
   <section class="py-20">
     <div class="mx-auto max-w-4xl px-6 lg:px-8">
       <div class="text-center mb-14" data-reveal>
-        <h2 class="font-display text-2xl sm:text-3xl font-bold">Reconditionné FastFix vs neuf</h2>
+        <h2 class="font-display text-2xl sm:text-3xl font-bold" data-ff-content="reconditionnes.sections.compare_title">Reconditionné FastFix vs neuf</h2>
       </div>
       <div data-reveal class="overflow-x-auto">
         <table class="w-full text-sm">
@@ -103,23 +99,20 @@ import "../styles/global.css";
               <th class="text-center p-4 font-display font-semibold rounded-tr-xl">Neuf en magasin</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-border">
-            {[
-              { label: "Prix", fastfix: "Jusqu'à -50%", neuf: "Prix plein" },
-              { label: "Garantie", fastfix: "12 mois FastFix", neuf: "24 mois constructeur" },
-              { label: "Batterie", fastfix: "> 85% de capacité", neuf: "100%" },
-              { label: "Pièces", fastfix: "D'origine ou certifiées", neuf: "D'origine" },
-              { label: "Tests qualité", fastfix: "30 points de contrôle", neuf: "Tests usine" },
-              { label: "Impact écologique", fastfix: "Réduit de 80%", neuf: "Empreinte complète" },
-              { label: "Retour", fastfix: "30 jours", neuf: "14 jours (légal)" },
-            ].map((row) => (
-              <tr>
-                <td class="p-4 font-medium text-text">{row.label}</td>
-                <td class="p-4 text-center text-accent font-medium">{row.fastfix}</td>
-                <td class="p-4 text-center text-text-muted">{row.neuf}</td>
-              </tr>
-            ))}
-          </tbody>
+          <ContentList
+            contentKey="reconditionnes.lists.compare"
+            variant="compare"
+            fallback={[
+              ["Prix", "Jusqu'à -50%", "Prix plein"],
+              ["Garantie", "12 mois FastFix", "24 mois constructeur"],
+              ["Batterie", "> 85% de capacité", "100%"],
+              ["Pièces", "D'origine ou certifiées", "D'origine"],
+              ["Tests qualité", "30 points de contrôle", "Tests usine"],
+              ["Impact écologique", "Réduit de 80%", "Empreinte complète"],
+              ["Retour", "30 jours", "14 jours (légal)"],
+            ]}
+            client:load
+          />
         </table>
       </div>
     </div>
@@ -128,7 +121,7 @@ import "../styles/global.css";
   <!-- CTA -->
   <section class="py-16 bg-bg-dark text-white">
     <div class="mx-auto max-w-3xl px-6 lg:px-8 text-center" data-reveal>
-      <h2 class="font-display text-2xl sm:text-3xl font-bold">Vous ne trouvez pas votre modèle ?</h2>
+      <h2 class="font-display text-2xl sm:text-3xl font-bold" data-ff-content="reconditionnes.sections.cta_title">Vous ne trouvez pas votre modèle ?</h2>
       <p class="mt-4 text-white/60">Contactez-nous — nous avons souvent des modèles en stock non listés. Arrivages réguliers.</p>
       <div class="mt-6 flex flex-wrap justify-center gap-4">
         <a href="/contact" class="inline-flex items-center gap-2 rounded-full bg-primary hover:bg-primary-dark px-7 py-3.5 text-sm font-semibold text-white transition-colors">Nous contacter</a>

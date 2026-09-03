@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 
 /* ─── API ─── */
-import { FASTFIX_API_URL } from "../lib/fastfix";
+import { FASTFIX_API_URL, useSiteConfig } from "../lib/fastfix";
 
 /* ─── DATA ─── */
 const brands = [
@@ -259,6 +259,15 @@ export default function BookingWizard() {
   const [clientType, setClientType] = useState<"particulier" | "entreprise">("particulier");
   const [remoteRepairs, setRemoteRepairs] = useState<Record<string, RepairCategory[]> | null>(null);
   const [remoteDevices, setRemoteDevices] = useState<Record<string, DeviceModel[]> | null>(null);
+  const siteConfig = useSiteConfig();
+
+  // Textes du bandeau, éditables dans wp-admin → FastFix → Contenus des pages.
+  const c = siteConfig?.content ?? {};
+  const heroBadge = c["rdv.hero.badge"] ?? "FastFix · Bruxelles";
+  const heroTitle = c["rdv.hero.title"] ?? "Planifiez votre réparation";
+  const heroText =
+    c["rdv.hero.text"] ??
+    "Choisissez votre appareil, la réparation et envoyez votre demande.\nAucun paiement à l'avance.";
 
   // Catalogue d'appareils (photos + numéros de modèle), éditable dans
   // wp-admin → FastFix → Appareils. En cas d'échec, on garde le fallback local.
@@ -404,14 +413,18 @@ export default function BookingWizard() {
       <div className="gradient-hero text-white py-10 px-6">
         <div className="mx-auto max-w-3xl">
           <span className="inline-block rounded-md bg-primary text-white text-xs font-bold uppercase tracking-wider px-3 py-1 mb-4">
-            FastFix · Bruxelles
+            {heroBadge}
           </span>
           <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
-            Planifiez votre réparation
+            {heroTitle}
           </h1>
           <p className="mt-2 text-white/70 text-sm max-w-lg">
-            Choisissez votre appareil, la réparation et envoyez votre demande.<br />
-            Aucun paiement à l'avance.
+            {heroText.split("\n").map((line, i) => (
+              <span key={i}>
+                {line}
+                {i < heroText.split("\n").length - 1 && <br />}
+              </span>
+            ))}
           </p>
           <div className="flex flex-wrap gap-2 mt-4">
             {[

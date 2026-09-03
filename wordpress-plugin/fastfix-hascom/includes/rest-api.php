@@ -64,6 +64,18 @@ add_action( 'rest_api_init', function() {
 		'permission_callback' => '__return_true',
 	] );
 
+	register_rest_route( 'fastfix/v1', '/categories', [
+		'methods'             => 'GET',
+		'callback'            => 'fastfix_get_categories_list',
+		'permission_callback' => '__return_true',
+	] );
+
+	register_rest_route( 'fastfix/v1', '/content', [
+		'methods'             => 'GET',
+		'callback'            => function() { return rest_ensure_response( fastfix_get_content_for_api() ); },
+		'permission_callback' => '__return_true',
+	] );
+
 	register_rest_route( 'fastfix/v1', '/config', [
 		'methods'             => 'GET',
 		'callback'            => 'fastfix_get_site_config',
@@ -120,6 +132,8 @@ function fastfix_get_site_config() {
 		'promises' => array_values( array_filter( [ $s['promise_1'], $s['promise_2'], $s['promise_3'] ] ) ),
 		'reviews'  => fastfix_get_reviews_data(),
 		'faq'      => fastfix_get_faq_data(),
+		'content'    => fastfix_get_content_for_api(),
+		'categories' => fastfix_get_categories_data(),
 	] );
 }
 
@@ -198,6 +212,34 @@ function fastfix_get_featured_repairs() {
 	}
 
 	return rest_ensure_response( $repairs );
+}
+
+/**
+ * Vignettes de la grille « Que faut-il réparer ? » de la page d'accueil.
+ */
+function fastfix_get_categories_data() {
+	$posts = get_posts( [
+		'post_type'      => 'fastfix_category',
+		'post_status'    => 'publish',
+		'posts_per_page' => -1,
+		'orderby'        => 'menu_order',
+		'order'          => 'ASC',
+	] );
+
+	$categories = [];
+	foreach ( $posts as $post ) {
+		$thumb_id     = get_post_thumbnail_id( $post->ID );
+		$categories[] = [
+			'name'  => $post->post_title,
+			'image' => $thumb_id ? wp_get_attachment_image_url( $thumb_id, 'medium' ) : '',
+			'link'  => get_post_meta( $post->ID, '_fastfix_link', true ) ?: '/reparations',
+		];
+	}
+	return $categories;
+}
+
+function fastfix_get_categories_list() {
+	return rest_ensure_response( fastfix_get_categories_data() );
 }
 
 /**

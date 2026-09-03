@@ -6,22 +6,30 @@
 
   --color-bg: #FFFFFF;
   --color-bg-alt: #F5F5F5;
-  --color-bg-dark: #1A1A1A;
+  --color-bg-dark: #0D0D10;
+  --color-ink: #08080A;
+  /* Jaune de la marque : réservé aux fonds sombres, où son contraste est excellent */
+  --color-brand: #F7E841;
   --color-surface: #FFFFFF;
-  --color-primary: #D4A017;
-  --color-primary-light: #F7E841;
-  --color-primary-dark: #B08C00;
-  --color-teal: #D4A017;
-  --color-teal-light: #F7E841;
-  --color-cyan: #F7E841;
-  --color-accent: #F7E841;
+  /* Deux dorés, choisis pour le contraste plutôt que par goût :
+   * - primary  : fonds clairs (texte, icônes, boutons). 5,7:1 sur blanc,
+   *              et 5,7:1 pour du texte blanc posé dessus → lisible partout.
+   * - brand     : fonds sombres uniquement (voir --color-brand ci-dessus).
+   * L'ancien #D4A017 ne donnait que 2,4:1 sur blanc : sous le minimum requis. */
+  --color-primary: #806200;
+  --color-primary-light: #D4A017;
+  --color-primary-dark: #665000;
+  --color-teal: #806200;
+  --color-teal-light: #D4A017;
+  --color-cyan: #D4A017;
+  --color-accent: #806200;
   --color-accent-light: #FDE68A;
   --color-warning: #F59E0B;
   --color-danger: #EF4444;
   --color-text: #111111;
   --color-text-light: #374151;
-  --color-text-muted: #6B7280;
-  --color-border: #E5E7EB;
+  --color-text-muted: #656C79;   /* 4,8:1 sur #F5F5F5 (était 4,43:1) */
+  --color-border: #E8E8EC;
   --color-border-dark: #D1D5DB;
 }
 
@@ -58,27 +66,54 @@ body {
     linear-gradient(110deg, #0A0A0A 0%, #1A1A1A 35%, #3D2E0A 68%, #B08C00 100%);
 }
 
-.gradient-main-soft {
-  background:
-    radial-gradient(circle at 80% 50%, rgba(247, 232, 65, 0.10) 0%, transparent 40%),
-    linear-gradient(110deg, #0A0A0A 0%, #1A1A1A 45%, #4A3510 100%);
-}
-
+/* ── Surfaces sombres ──
+ * Un atelier éclairé : fond quasi noir et une seule source de lumière jaune,
+ * placée derrière le produit. Pas de dégradé traversant, qui virait à l'olive
+ * en se mélangeant à la photo et écrasait la lisibilité du texte.
+ */
 .gradient-hero {
   background:
-    radial-gradient(circle at 78% 42%, rgba(247, 232, 65, 0.15) 0%, transparent 32%),
-    radial-gradient(circle at 55% 100%, rgba(212, 160, 23, 0.15) 0%, transparent 45%),
-    linear-gradient(110deg, #0A0A0A 0%, #1A1A1A 30%, #3D2E0A 60%, #6B5510 82%, #D4A017 100%);
+    radial-gradient(ellipse 70% 80% at 76% 46%, rgba(247, 232, 65, 0.22) 0%, rgba(247, 232, 65, 0.06) 45%, transparent 72%),
+    radial-gradient(ellipse 90% 60% at 50% 120%, rgba(212, 160, 23, 0.10) 0%, transparent 60%),
+    var(--color-ink);
 }
 
 .gradient-footer {
   background:
-    linear-gradient(110deg, #0A0A0A 0%, #141414 35%, #2A2008 70%, #4A3510 100%);
+    radial-gradient(ellipse 60% 70% at 88% 12%, rgba(247, 232, 65, 0.10) 0%, transparent 62%),
+    var(--color-ink);
 }
 
-.gradient-cta {
-  background:
-    linear-gradient(135deg, #B08C00 0%, #D4A017 45%, #F7E841 100%);
+/* ── Boutons ──
+ * Le jaune de la marque sur texte quasi noir : c'est le contraste le plus fort
+ * du site, réservé à l'action principale. Le doré (#D4A017) reste utilisé pour
+ * le texte et les icônes sur fond clair, où il passe le contraste.
+ */
+.btn-brand {
+  background: var(--color-brand);
+  color: var(--color-ink);
+  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.btn-brand:hover {
+  background: #FFF469;
+  box-shadow: 0 6px 20px rgba(247, 232, 65, 0.22);
+}
+
+.btn-ghost-light {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #fff;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.btn-ghost-light:hover {
+  background: rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* ── Accessibilité : un anneau de focus visible au clavier ── */
+:where(a, button, input, select, textarea, summary):focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 /* ── Card styles ── */
@@ -89,8 +124,9 @@ body {
   transition: box-shadow 0.3s, transform 0.3s;
 }
 .card:hover {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
-  transform: translateY(-2px);
+  border-color: var(--color-border-dark);
+  box-shadow: 0 12px 28px rgba(13, 13, 16, 0.07), 0 2px 6px rgba(13, 13, 16, 0.04);
+  transform: translateY(-3px);
 }
 
 /* ── Device card (white frame) ── */
@@ -141,7 +177,7 @@ body {
 .pill:hover {
   border-color: var(--color-primary);
   color: var(--color-primary);
-  box-shadow: 0 2px 12px rgba(212, 160, 23, 0.15);
+  box-shadow: 0 2px 12px rgba(138, 106, 0, 0.12);
 }
 
 /* ── Wave separator ── */
@@ -212,7 +248,7 @@ body {
   background: var(--color-primary);
   color: white;
   border-color: var(--color-primary);
-  box-shadow: 0 4px 16px rgba(212, 160, 23, 0.3);
+  box-shadow: 0 4px 16px rgba(138, 106, 0, 0.25);
 }
 
 /* ── Floating orb animations ── */
@@ -293,39 +329,39 @@ body {
 }
 
 /* ── Scroll reveal ── */
-[data-reveal] {
+.ff-anim [data-reveal] {
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
               transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
-[data-reveal].visible {
+.ff-anim [data-reveal].visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-[data-reveal-children] > * {
+.ff-anim [data-reveal-children] > * {
   opacity: 0;
   transform: translateY(16px);
   transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
               transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
-[data-reveal-children].visible > * {
+.ff-anim [data-reveal-children].visible > * {
   opacity: 1;
   transform: translateY(0);
 }
-[data-reveal-children].visible > *:nth-child(1) { transition-delay: 0ms; }
-[data-reveal-children].visible > *:nth-child(2) { transition-delay: 80ms; }
-[data-reveal-children].visible > *:nth-child(3) { transition-delay: 160ms; }
-[data-reveal-children].visible > *:nth-child(4) { transition-delay: 240ms; }
-[data-reveal-children].visible > *:nth-child(5) { transition-delay: 320ms; }
-[data-reveal-children].visible > *:nth-child(6) { transition-delay: 400ms; }
-[data-reveal-children].visible > *:nth-child(7) { transition-delay: 480ms; }
-[data-reveal-children].visible > *:nth-child(8) { transition-delay: 560ms; }
-[data-reveal-children].visible > *:nth-child(9) { transition-delay: 640ms; }
-[data-reveal-children].visible > *:nth-child(10) { transition-delay: 720ms; }
-[data-reveal-children].visible > *:nth-child(11) { transition-delay: 800ms; }
-[data-reveal-children].visible > *:nth-child(12) { transition-delay: 880ms; }
+.ff-anim [data-reveal-children].visible > *:nth-child(1) { transition-delay: 0ms; }
+.ff-anim [data-reveal-children].visible > *:nth-child(2) { transition-delay: 80ms; }
+.ff-anim [data-reveal-children].visible > *:nth-child(3) { transition-delay: 160ms; }
+.ff-anim [data-reveal-children].visible > *:nth-child(4) { transition-delay: 240ms; }
+.ff-anim [data-reveal-children].visible > *:nth-child(5) { transition-delay: 320ms; }
+.ff-anim [data-reveal-children].visible > *:nth-child(6) { transition-delay: 400ms; }
+.ff-anim [data-reveal-children].visible > *:nth-child(7) { transition-delay: 480ms; }
+.ff-anim [data-reveal-children].visible > *:nth-child(8) { transition-delay: 560ms; }
+.ff-anim [data-reveal-children].visible > *:nth-child(9) { transition-delay: 640ms; }
+.ff-anim [data-reveal-children].visible > *:nth-child(10) { transition-delay: 720ms; }
+.ff-anim [data-reveal-children].visible > *:nth-child(11) { transition-delay: 800ms; }
+.ff-anim [data-reveal-children].visible > *:nth-child(12) { transition-delay: 880ms; }
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; }

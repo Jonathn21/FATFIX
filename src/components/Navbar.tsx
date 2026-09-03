@@ -95,7 +95,7 @@ export default function Navbar() {
           <ul className="hidden lg:flex items-center gap-6">
             {links.map((l) => (
               <li key={l.href}>
-                <a href={l.href} className="text-sm font-medium text-white/80 hover:text-primary transition-colors">
+                <a href={l.href} className="text-sm font-medium text-white/80 hover:text-brand transition-colors">
                   {l.label}
                 </a>
               </li>
@@ -105,7 +105,7 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-3">
             <a
               href={phoneLink}
-              className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-white/10 transition-colors text-white/70 hover:text-primary"
+              className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-white/10 transition-colors text-white/70 hover:text-brand"
               aria-label="Appeler"
             >
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -114,7 +114,7 @@ export default function Navbar() {
             </a>
             <a
               href="/rdv"
-              className="inline-flex items-center gap-2 rounded-full bg-primary hover:bg-primary-dark px-5 py-2.5 text-sm font-semibold text-white transition-colors shadow-sm"
+              className="btn-brand inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold"
             >
               Prendre rendez-vous
             </a>
@@ -153,7 +153,7 @@ export default function Navbar() {
             Garantie
           </a>
           <a href="/rdv" onClick={() => setMenuOpen(false)}
-             className="mt-4 rounded-full bg-primary px-8 py-3 text-lg font-semibold text-white">
+             className="btn-brand mt-4 rounded-full px-8 py-3 text-lg font-semibold">
             Prendre RDV
           </a>
         </div>

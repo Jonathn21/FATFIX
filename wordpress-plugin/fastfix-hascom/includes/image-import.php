@@ -129,10 +129,12 @@ add_action( 'admin_post_fastfix_import_images', function() {
 
 	$devices_result     = fastfix_run_bulk_image_import( 'fastfix_device', fastfix_device_image_map(), 'devices', $force );
 	$refurbished_result = fastfix_run_bulk_image_import( 'fastfix_refurbished', fastfix_refurbished_image_map(), 'devices', $force );
+	$category_result    = fastfix_run_bulk_image_import( 'fastfix_category', fastfix_category_image_map(), 'devices', $force );
 
 	set_transient( 'fastfix_import_result', [
 		'devices'     => $devices_result,
 		'refurbished' => $refurbished_result,
+		'categories'  => $category_result,
 	], 60 );
 
 	wp_safe_redirect( admin_url( 'admin.php?page=fastfix-menu&imported=1' ) );

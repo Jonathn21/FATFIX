@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer.astro";
+import ContentList from "../components/ContentList";
 import "../styles/global.css";
 
 const store = {
@@ -22,6 +23,13 @@ const store = {
   ],
   features: ["Micro-soudure", "Réparation PS5/Xbox", "Reconditionnés en stock", "Accessoires en vente", "Protection d'écran"],
 };
+
+// Icônes des cartes « infos pratiques », réutilisées par position.
+const PRACTICAL_ICONS = [
+  "M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3",
+  "M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z",
+  "M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75",
+];
 ---
 
 <Layout title="Notre boutique — Bruxelles | FastFix">
@@ -34,8 +42,8 @@ const store = {
       <div class="absolute inset-0 bg-gradient-to-r from-bg-dark via-bg-dark/90 to-bg-dark/70"></div>
     </div>
     <div class="relative mx-auto max-w-7xl px-6 lg:px-8 text-center">
-      <h1 data-reveal class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">Notre boutique</h1>
-      <p data-reveal class="mt-4 text-white/60 text-lg max-w-xl mx-auto">
+      <h1 data-reveal data-ff-content="boutiques.hero.title" class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">Notre boutique</h1>
+      <p data-reveal data-ff-content="boutiques.hero.text" class="mt-4 text-white/60 text-lg max-w-xl mx-auto">
         Située à Schaerbeek, à deux pas de la Gare du Nord. Sans rendez-vous ou avec réservation.
       </p>
     </div>
@@ -48,7 +56,7 @@ const store = {
         <div class="card overflow-hidden">
           <div class="grid md:grid-cols-2">
             <div class="aspect-video md:aspect-auto overflow-hidden">
-              <img src={store.img} alt={store.name} class="w-full h-full object-cover" loading="lazy"/>
+              <img src={store.img} data-ff-img="boutiques.store.image" alt={store.name} class="w-full h-full object-cover" loading="lazy"/>
             </div>
             <div class="p-8 lg:p-10">
               <h2 class="font-display text-2xl font-bold mb-5">{store.name}</h2>
@@ -79,11 +87,12 @@ const store = {
               </div>
 
               <h3 class="font-display font-semibold text-sm mb-2">Disponible dans cette boutique</h3>
-              <div class="flex flex-wrap gap-2 mb-6">
-                {store.features.map((f) => (
-                  <span class="badge text-xs">{f}</span>
-                ))}
-              </div>
+              <ContentList
+                contentKey="boutiques.lists.features"
+                variant="badges"
+                fallback={[["Micro-soudure"], ["Réparation PS5/Xbox"], ["Reconditionnés en stock"], ["Accessoires en vente"], ["Protection d'écran"]]}
+                client:load
+              />
 
               <div class="flex flex-wrap gap-3">
                 <a href="/rdv" class="inline-flex items-center gap-2 rounded-full bg-primary hover:bg-primary-dark px-5 py-2.5 text-sm font-semibold text-white transition-colors">Prendre RDV</a>
@@ -98,20 +107,18 @@ const store = {
       </div>
 
       <!-- What to bring -->
-      <div class="mt-12 grid sm:grid-cols-3 gap-6" data-reveal-children>
-        {[
-          { icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3"/>`, title: "Quoi apporter ?", desc: "Juste votre appareil. Pas besoin de chargeur, câble ou boîte. Nous avons tout le nécessaire." },
-          { icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>`, title: "Combien de temps ?", desc: "La plupart des réparations sont terminées en 60 minutes. Vous pouvez attendre sur place ou revenir." },
-          { icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75"/>`, title: "Moyens de paiement", desc: "Cash, Bancontact, carte de crédit et paiement mobile (Apple Pay, Google Pay)." },
-        ].map((item) => (
-          <div class="card p-6">
-            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 mb-3">
-              <svg class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" set:html={item.icon} />
-            </div>
-            <h3 class="font-display font-bold text-sm mb-1">{item.title}</h3>
-            <p class="text-xs text-text-muted leading-relaxed">{item.desc}</p>
-          </div>
-        ))}
+      <div class="mt-12">
+        <ContentList
+          contentKey="boutiques.lists.practical"
+          variant="cards"
+          icons={PRACTICAL_ICONS}
+          fallback={[
+            ["Quoi apporter ?", "Juste votre appareil. Pas besoin de chargeur, câble ou boîte. Nous avons tout le nécessaire."],
+            ["Combien de temps ?", "La plupart des réparations sont terminées en 60 minutes. Vous pouvez attendre sur place ou revenir."],
+            ["Moyens de paiement", "Cash, Bancontact, carte de crédit et paiement mobile (Apple Pay, Google Pay)."],
+          ]}
+          client:load
+        />
       </div>
 
       <!-- Mail option -->
@@ -119,12 +126,12 @@ const store = {
         <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 mx-auto mb-4">
           <svg class="h-6 w-6 text-accent" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
         </div>
-        <h3 class="font-display text-xl font-bold mb-2">Trop loin pour vous déplacer ?</h3>
+        <h3 class="font-display text-xl font-bold mb-2" data-ff-content="boutiques.mail.title">Trop loin pour vous déplacer ?</h3>
         <p class="text-text-muted text-sm mb-5 max-w-md mx-auto">
           Envoyez votre appareil par la poste et nous le réparons sous 3 à 5 jours ouvrés. Étiquette prépayée incluse.
         </p>
         <a href="/envoi" class="inline-flex items-center gap-2 rounded-full bg-primary hover:bg-primary-dark px-6 py-3 text-sm font-semibold text-white transition-colors">
-          Découvrir l'envoi postal
+          <span data-ff-content="boutiques.mail.cta">Découvrir l'envoi postal</span>
           <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
         </a>
       </div>

@@ -3,11 +3,23 @@ import Layout from "../layouts/Layout.astro";
 import Navbar from "../components/Navbar";
 import DeviceGrid from "../components/DeviceGrid";
 import PopularDevices from "../components/PopularDevices";
+import ContentList from "../components/ContentList";
+import DeviceCategories from "../components/DeviceCategories";
 import PopularRepairs from "../components/PopularRepairs";
 import ReviewCarousel from "../components/ReviewCarousel";
 import FAQ from "../components/FAQ";
 import Footer from "../components/Footer.astro";
 import "../styles/global.css";
+
+// Icônes des pastilles « Que faut-il réparer ? », réutilisées par position.
+const PILL_ICONS = [
+  "M5 2h14v20H5z M12 18h.01",
+  "M6 7h12v10H6z M10 7V4 M14 7V4",
+  "M4 2h16v20H4z M4 14h16",
+  "M12 2.69l5.66 5.66a8 8 0 11-11.31 0z",
+  "M11 3a8 8 0 108 8 8 8 0 00-8-8z M21 21l-4.35-4.35",
+  "M11 3a8 8 0 108 8 8 8 0 00-8-8z M21 21l-4.35-4.35 M8 11h6 M11 8v6",
+];
 ---
 
 <Layout>
@@ -15,34 +27,28 @@ import "../styles/global.css";
 
   <!-- ═══════ HERO — GRADIENT TEAL → PURPLE ═══════ -->
   <section class="relative overflow-hidden gradient-hero text-white">
-    <!-- Background image overlay -->
-    <div class="absolute inset-0">
-      <img src="/images/media/workshop.jpg" alt="" class="w-full h-full object-cover opacity-10 mix-blend-overlay" />
-    </div>
     <div class="relative mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
       <div class="grid lg:grid-cols-2 gap-10 items-center">
         <div>
-          <h1 data-reveal class="font-display text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight leading-[1.1]">
+          <h1 data-reveal data-ff-content="home.hero.title" class="font-display text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight leading-[1.1]">
             Réparez votre téléphone &amp; ordinateur à Bruxelles
           </h1>
-          <p data-reveal class="mt-5 text-lg text-white/80 max-w-lg leading-relaxed">
+          <p data-reveal data-ff-content="home.hero.subtitle" class="mt-5 text-lg text-white/80 max-w-lg leading-relaxed">
             Des solutions fiables et rapides pour vos appareils électroniques
           </p>
           <div data-reveal class="mt-8 flex flex-wrap gap-4">
-            <a href="/rdv" class="inline-flex items-center gap-2 rounded-full bg-white hover:bg-white/90 px-7 py-3.5 text-base font-semibold text-bg-dark transition-colors shadow-lg shadow-black/20">
-              Prendre rendez-vous
+            <a href="/rdv" class="btn-brand inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-base font-semibold"><span data-ff-content="home.hero.cta_primary">Prendre rendez-vous</span>
             </a>
-            <a href="/prix" class="inline-flex items-center gap-2 rounded-full bg-white/15 border border-white/30 hover:bg-white/25 backdrop-blur-sm px-7 py-3.5 text-base font-semibold text-white transition-all">
-              Voir les prix
+            <a href="/prix" class="btn-ghost-light inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-base font-semibold"><span data-ff-content="home.hero.cta_secondary">Voir les prix</span>
             </a>
           </div>
           <a data-reveal href="/envoi" class="mt-5 inline-flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors group">
             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
-            Envoyer par la poste →
+            <span data-ff-content="home.hero.link_postal">Envoyer par la poste →</span>
           </a>
         </div>
         <div data-reveal class="relative hidden lg:flex items-center justify-center">
-          <img src="/images/media/hero-devices.png" alt="iPhone, Samsung, MacBook, iPad, PS5, Xbox et outils de réparation FastFix" class="w-full max-w-xl object-contain drop-shadow-2xl" />
+          <img src="/images/media/hero-devices.png" data-ff-img="home.hero.image" alt="iPhone, Samsung, MacBook, iPad, PS5, Xbox et outils de réparation FastFix" class="w-full max-w-xl object-contain drop-shadow-2xl" />
         </div>
       </div>
     </div>
@@ -56,14 +62,11 @@ import "../styles/global.css";
 
   <!-- ═══════ APPAREILS POPULAIRES ═══════ -->
   <section class="py-16 lg:py-20 relative overflow-hidden">
-    <!-- Floating orbs -->
-    <div class="orb orb-purple" style="width:400px;height:400px;top:-100px;right:-150px;"></div>
-    <div class="orb orb-teal" style="width:300px;height:300px;bottom:-80px;left:-100px;"></div>
     <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
       <div data-reveal class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
-        <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight">Appareils populaires</h2>
+        <h2 data-ff-content="home.popular_devices.title" class="font-display text-2xl sm:text-3xl font-bold tracking-tight">Appareils populaires</h2>
         <a href="/reparations" class="text-sm font-semibold text-primary hover:underline inline-flex items-center gap-1.5">
-          Tous les modèles →
+          <span data-ff-content="home.popular_devices.link_label">Tous les modèles →</span>
         </a>
       </div>
       <PopularDevices client:load />
@@ -75,64 +78,39 @@ import "../styles/global.css";
   <!-- ═══════ QUE FAUT-IL RÉPARER ? ═══════ -->
   <section class="py-16 lg:py-20 bg-bg-alt">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
-      <h2 data-reveal class="font-display text-2xl sm:text-3xl font-bold text-center mb-6">Que faut-il réparer ?</h2>
+      <h2 data-reveal data-ff-content="home.what_to_repair.title" class="font-display text-2xl sm:text-3xl font-bold text-center mb-6">Que faut-il réparer ?</h2>
 
       <!-- Repair type pills -->
-      <div data-reveal class="flex flex-wrap justify-center gap-3 mb-12">
-        {[
-          { label: "Réparation d'écran", icon: `<rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>` },
-          { label: "Remplacement de la batterie", icon: `<rect x="6" y="7" width="12" height="10" rx="1"/><line x1="10" y1="7" x2="10" y2="4"/><line x1="14" y1="7" x2="14" y2="4"/>` },
-          { label: "Remplacement de la face arrière", icon: `<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M4 14h16"/>` },
-          { label: "Réparation dégât des eaux", icon: `<path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/>` },
-          { label: "Polissage de l'écran", icon: `<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>` },
-          { label: "Diagnostic", icon: `<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><path d="M8 11h6M11 8v6"/>` },
-        ].map((item) => (
-          <a href="/reparations" class="pill">
-            <svg class="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" set:html={item.icon} />
-            {item.label}
-          </a>
-        ))}
-      </div>
+      <ContentList
+        contentKey="home.what_to_repair.pills"
+        variant="pill"
+        icons={PILL_ICONS}
+        fallback={[
+          ["Réparation d'écran"],
+          ["Remplacement de la batterie"],
+          ["Remplacement de la face arrière"],
+          ["Réparation dégât des eaux"],
+          ["Polissage de l'écran"],
+          ["Diagnostic"],
+        ]}
+        client:load
+      />
 
       <!-- Device category grid -->
-      <div data-reveal-children class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-        {[
-          { name: "iPhone", img: "/images/devices/iphone-16.webp" },
-          { name: "Samsung", img: "/images/devices/galaxy-s26-ultra.webp" },
-          { name: "iPad", img: "/images/devices/ipad-pro.webp" },
-          { name: "MacBook", img: "/images/devices/macbook-air.webp" },
-          { name: "Apple Watch", img: "/images/devices/apple-watch.webp" },
-          { name: "iMac", img: "/images/devices/imac.webp" },
-          { name: "Samsung Galaxy Tab", img: "/images/devices/galaxy-tab.webp" },
-          { name: "PlayStation", img: "/images/devices/ps5.webp" },
-          { name: "Google Pixel", img: "/images/devices/pixel-10-pro.webp" },
-          { name: "OnePlus", img: "/images/devices/oneplus-13.webp" },
-          { name: "Xbox", img: "/images/devices/xbox-series-x.webp" },
-          { name: "AirPods", img: "/images/devices/airpods-max.webp" },
-        ].map((cat) => (
-          <a href="/reparations" class="group rounded-2xl bg-white border border-border p-6 flex flex-col items-center text-center transition-all hover:shadow-lg hover:-translate-y-1">
-            <div class="h-24 sm:h-28 flex items-center justify-center mb-4">
-              <img src={cat.img} alt={cat.name} class="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-110" loading="lazy" />
-            </div>
-            <span class="font-display font-semibold text-sm text-text">{cat.name}</span>
-          </a>
-        ))}
-      </div>
+      <DeviceCategories client:load />
     </div>
   </section>
 
   <!-- ═══════ DE VRAIS MAGASINS, DE VRAIS SPÉCIALISTES ═══════ -->
   <section class="py-16 lg:py-20 relative overflow-hidden">
-    <div class="orb orb-teal" style="width:350px;height:350px;top:50px;left:-120px;"></div>
-    <div class="orb orb-accent" style="width:250px;height:250px;bottom:30px;right:-80px;"></div>
     <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
       <div class="grid lg:grid-cols-2 gap-10 items-center" data-reveal>
         <div class="rounded-2xl overflow-hidden">
-          <img src="/images/media/store-front.jpg" alt="Boutique FastFix" class="w-full h-full object-cover aspect-[4/3]" loading="lazy" />
+          <img src="/images/media/store-front.jpg" data-ff-img="home.real_stores.image" alt="Boutique FastFix" class="w-full h-full object-cover aspect-[4/3]" loading="lazy" />
         </div>
         <div>
-          <h2 class="font-display text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight">De vrais magasins, de vrais spécialistes</h2>
-          <p class="mt-4 text-text-muted leading-relaxed">
+          <h2 data-ff-content="home.real_stores.title" class="font-display text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight">De vrais magasins, de vrais spécialistes</h2>
+          <p data-ff-content="home.real_stores.text" class="mt-4 text-text-muted leading-relaxed">
             Passez sans rendez-vous ou réservez en ligne. La réparation se fait dans notre propre atelier, souvent pendant que vous attendez.
           </p>
           <ul class="mt-6 space-y-4">
@@ -151,7 +129,7 @@ import "../styles/global.css";
             ))}
           </ul>
           <a href="/a-propos" class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
-            En savoir plus sur nous →
+            <span data-ff-content="home.real_stores.link_label">En savoir plus sur nous →</span>
           </a>
         </div>
       </div>
@@ -161,21 +139,21 @@ import "../styles/global.css";
   <!-- ═══════ EN MAGASIN OU PAR LA POSTE ═══════ -->
   <section class="py-16 lg:py-20 bg-bg-alt">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
-      <h2 data-reveal class="font-display text-2xl sm:text-3xl font-bold text-center mb-4">
+      <h2 data-reveal data-ff-content="home.store_or_post.title" class="font-display text-2xl sm:text-3xl font-bold text-center mb-4">
         Passer en magasin ou envoyer par la poste ? Les deux sont possibles.
       </h2>
       <div data-reveal-children class="grid md:grid-cols-2 gap-6 mt-10">
         <!-- En magasin -->
         <div class="card overflow-hidden group">
           <div class="aspect-video overflow-hidden">
-            <img src="/images/media/store-counter.jpg" alt="En magasin" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy"/>
+            <img src="/images/media/store-counter.jpg" data-ff-img="home.store_or_post.store_image" alt="En magasin" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy"/>
           </div>
           <div class="p-7">
             <div class="flex items-center gap-3 mb-3">
               <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
                 <svg class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72"/></svg>
               </div>
-              <h3 class="font-display text-xl font-bold">En magasin</h3>
+              <h3 data-ff-content="home.store_or_post.store_title" class="font-display text-xl font-bold">En magasin</h3>
             </div>
             <p class="text-text-muted text-sm leading-relaxed mb-4">Notre magasin à Schaerbeek, Bruxelles. Souvent prêt pendant que vous attendez.</p>
             <a href="/rdv" class="inline-flex items-center gap-2 rounded-full bg-primary hover:bg-primary-dark px-5 py-2.5 text-sm font-semibold text-white transition-colors">Prendre rendez-vous</a>
@@ -184,18 +162,18 @@ import "../styles/global.css";
         <!-- Envoi postal -->
         <div class="card overflow-hidden group">
           <div class="aspect-video overflow-hidden">
-            <img src="/images/media/repair-closeup.jpg" alt="Envoi par la poste" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy"/>
+            <img src="/images/media/repair-closeup.jpg" data-ff-img="home.store_or_post.post_image" alt="Envoi par la poste" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy"/>
           </div>
           <div class="p-7">
             <div class="flex items-center gap-3 mb-3">
               <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-teal/10">
                 <svg class="h-5 w-5 text-teal" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
               </div>
-              <h3 class="font-display text-xl font-bold">Envoi par la poste</h3>
+              <h3 data-ff-content="home.store_or_post.post_title" class="font-display text-xl font-bold">Envoi par la poste</h3>
             </div>
             <p class="text-text-muted text-sm leading-relaxed mb-4">Choisissez votre appareil et votre réparation, recevez une étiquette d'envoi par e-mail et postez votre colis quand cela vous convient.</p>
             <a href="/envoi" class="inline-flex items-center gap-2 rounded-full border-2 border-border hover:border-primary px-5 py-2.5 text-sm font-semibold text-text hover:text-primary transition-all">
-              Comment ça marche →
+              <span data-ff-content="home.store_or_post.post_cta">Comment ça marche →</span>
             </a>
           </div>
         </div>
@@ -212,13 +190,13 @@ import "../styles/global.css";
           <img src="/images/devices/iphone-17.webp" alt="" class="h-36 object-contain rotate-3" />
         </div>
         <div class="flex-1">
-          <h3 class="font-display text-xl sm:text-2xl font-bold">Plutôt vendre que réparer ?</h3>
+          <h3 data-ff-content="home.sell.title" class="font-display text-xl sm:text-2xl font-bold">Plutôt vendre que réparer ?</h3>
           <p class="mt-2 text-text-muted text-sm">
             Nous rachetons les iPhone — jusqu'à € 800, selon le modèle et l'état. Calculez votre offre en ligne.
           </p>
         </div>
         <a href="/contact" class="flex-shrink-0 inline-flex items-center gap-2 rounded-full bg-primary hover:bg-primary-dark px-6 py-3 text-sm font-semibold text-white transition-colors whitespace-nowrap">
-          Calculer mon offre
+          <span data-ff-content="home.sell.cta">Calculer mon offre</span>
         </a>
       </div>
     </div>
@@ -226,9 +204,8 @@ import "../styles/global.css";
 
   <!-- ═══════ NOS MAGASINS ═══════ -->
   <section class="py-16 lg:py-20 relative overflow-hidden">
-    <div class="orb orb-purple" style="width:300px;height:300px;top:-60px;left:30%;"></div>
     <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
-      <h2 data-reveal class="font-display text-2xl sm:text-3xl font-bold text-center mb-10">Notre magasin</h2>
+      <h2 data-reveal data-ff-content="home.our_store.title" class="font-display text-2xl sm:text-3xl font-bold text-center mb-10">Notre magasin</h2>
       <div data-reveal-children class="max-w-lg mx-auto">
         {[
           { name: "FastFix Bruxelles", status: "Fermé", nextOpen: "lun 10:00", address: "Chaussée de Haecht 163, 1030 Schaerbeek", phone: "02 219 49 16", phoneFull: "+3222194916", img: "/images/media/store-front.jpg" },
@@ -288,13 +265,11 @@ import "../styles/global.css";
 
   <!-- ═══════ RECONDITIONNÉS PROMO ═══════ -->
   <section class="py-16 lg:py-20 relative overflow-hidden">
-    <div class="orb orb-accent" style="width:350px;height:350px;top:-50px;right:-100px;"></div>
-    <div class="orb orb-purple" style="width:280px;height:280px;bottom:-60px;left:-80px;"></div>
     <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
       <div data-reveal class="grid md:grid-cols-2 gap-10 items-center">
         <div>
           <span class="badge badge-purple mb-4">Nouveau</span>
-          <h2 class="font-display text-2xl sm:text-3xl font-bold">Smartphones reconditionnés, garantis 12 mois</h2>
+          <h2 data-ff-content="home.refurb_teaser.title" class="font-display text-2xl sm:text-3xl font-bold">Smartphones reconditionnés, garantis 12 mois</h2>
           <p class="mt-4 text-text-muted leading-relaxed">
             iPhones et Samsung reconditionnés par nos techniciens, testés sur 30 points de contrôle. Comme neufs, sans le prix du neuf.
           </p>
@@ -316,7 +291,7 @@ import "../styles/global.css";
   <!-- ═══════ FAQ ═══════ -->
   <section class="py-16 lg:py-20 bg-bg-alt">
     <div class="mx-auto max-w-3xl px-6 lg:px-8">
-      <h2 data-reveal class="font-display text-2xl sm:text-3xl font-bold text-center mb-10">Questions fréquentes</h2>
+      <h2 data-reveal data-ff-content="home.faq.title" class="font-display text-2xl sm:text-3xl font-bold text-center mb-10">Questions fréquentes</h2>
       <div data-reveal>
         <FAQ client:visible />
       </div>
@@ -327,7 +302,7 @@ import "../styles/global.css";
   <section class="py-10">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div data-reveal class="bg-bg-dark rounded-3xl p-10 lg:p-14 text-center text-white">
-        <h2 class="font-display text-2xl sm:text-3xl font-bold">Comment souhaitez-vous déposer votre appareil ?</h2>
+        <h2 data-ff-content="home.cta_band.title" class="font-display text-2xl sm:text-3xl font-bold">Comment souhaitez-vous déposer votre appareil ?</h2>
         <div class="mt-8 flex flex-wrap justify-center gap-4">
           <a href="/rdv" class="inline-flex items-center gap-2 rounded-full bg-primary hover:bg-primary-dark px-7 py-3.5 text-base font-semibold text-white transition-colors">
             Prendre rendez-vous
@@ -344,10 +319,10 @@ import "../styles/global.css";
     </div>
     <div class="relative mx-auto max-w-4xl px-6 lg:px-8 text-center">
       <h2 data-reveal class="font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
-        Appareil cassé ? On s'en occupe.
+        <span data-ff-content="home.final_cta.title">Appareil cassé ? On s'en occupe.</span>
       </h2>
       <p data-reveal class="mt-4 text-white/70 max-w-xl mx-auto">
-        Prenez rendez-vous ou envoyez votre appareil à l'un de nos magasins.
+        <span data-ff-content="home.final_cta.text">Prenez rendez-vous ou envoyez votre appareil à l'un de nos magasins.</span>
       </p>
       <div data-reveal class="mt-8 flex flex-wrap justify-center gap-4">
         <a href="/rdv" class="inline-flex items-center gap-2 rounded-full bg-white text-primary hover:bg-white/90 px-7 py-3.5 text-base font-semibold transition-colors">

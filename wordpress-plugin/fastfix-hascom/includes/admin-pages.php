@@ -19,6 +19,7 @@ add_action( 'admin_menu', function() {
 		26
 	);
 	add_submenu_page( 'fastfix-menu', 'Tableau de bord', 'Tableau de bord', 'manage_options', 'fastfix-menu', 'fastfix_render_dashboard_page' );
+	add_submenu_page( 'fastfix-menu', 'Contenus des pages', 'Contenus des pages', 'manage_options', 'fastfix-contenus', 'fastfix_render_content_page' );
 	add_submenu_page( 'fastfix-menu', 'Grille de tarifs', 'Grille de tarifs', 'manage_options', 'fastfix-tarifs', 'fastfix_render_pricing_page' );
 	add_submenu_page( 'fastfix-menu', 'Réglages du site', 'Réglages du site', 'manage_options', 'fastfix-reglages', 'fastfix_render_settings_page' );
 } );

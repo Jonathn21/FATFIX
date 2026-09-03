@@ -59,6 +59,7 @@ function fastfix_render_dashboard_page() {
 		'Reconditionnés' => wp_count_posts( 'fastfix_refurbished' )->publish ?? 0,
 		'Avis clients'   => wp_count_posts( 'fastfix_review' )->publish ?? 0,
 		'Questions FAQ'  => wp_count_posts( 'fastfix_faq' )->publish ?? 0,
+		'Catégories'     => wp_count_posts( 'fastfix_category' )->publish ?? 0,
 	];
 
 	$recent = get_posts( [ 'post_type' => 'fastfix_booking', 'post_status' => 'publish', 'posts_per_page' => 6 ] );
@@ -73,9 +74,11 @@ function fastfix_render_dashboard_page() {
 					Appareils : <?php echo (int) $result['devices']['imported']; ?> importée(s),
 					<?php echo (int) $result['devices']['skipped']; ?> déjà en place ·
 					Reconditionnés : <?php echo (int) $result['refurbished']['imported']; ?> importée(s),
-					<?php echo (int) $result['refurbished']['skipped']; ?> déjà en place.
+					<?php echo (int) $result['refurbished']['skipped']; ?> déjà en place ·
+					Catégories : <?php echo (int) ( $result['categories']['imported'] ?? 0 ); ?> importée(s),
+					<?php echo (int) ( $result['categories']['skipped'] ?? 0 ); ?> déjà en place.
 				</p>
-				<?php $errors = array_merge( $result['devices']['errors'], $result['refurbished']['errors'] ); ?>
+				<?php $errors = array_merge( $result['devices']['errors'], $result['refurbished']['errors'], $result['categories']['errors'] ?? [] ); ?>
 				<?php if ( $errors ) : ?>
 					<p><strong>Erreurs :</strong> <?php echo esc_html( implode( ' | ', array_slice( $errors, 0, 5 ) ) ); ?></p>
 				<?php endif; ?>
@@ -163,6 +166,7 @@ function fastfix_render_dashboard_page() {
 							'Reconditionnés' => 'edit.php?post_type=fastfix_refurbished',
 							'Avis clients'   => 'edit.php?post_type=fastfix_review',
 							'Questions FAQ'  => 'edit.php?post_type=fastfix_faq',
+							'Catégories'     => 'edit.php?post_type=fastfix_category',
 						];
 						foreach ( $content_counts as $label => $count ) :
 						?>

@@ -27,6 +27,12 @@ const {
     />
 
     <title>{title}</title>
+
+    <!-- Les animations d'apparition ne masquent le contenu que si le JavaScript
+         répond. Sans ce marqueur (JS bloqué ou en erreur), tout reste visible. -->
+    <script is:inline>
+      document.documentElement.classList.add("ff-anim");
+    </script>
   </head>
   <body class="min-h-screen">
     <slot />
@@ -77,6 +83,35 @@ const {
           const url = cfg.socials?.[el.dataset.ffSocial!];
           if (url) (el as HTMLAnchorElement).href = url;
           else el.remove();
+        });
+
+        // Pastille d'ouverture : verte quand la boutique est ouverte
+        document.querySelectorAll<HTMLElement>("[data-ff-status-dot]").forEach((el) => {
+          el.classList.remove("bg-red-400", "bg-green-400");
+          el.classList.add(cfg.hours?.isOpen ? "bg-green-400" : "bg-red-400");
+        });
+
+        // Contenus des pages : titres, textes et images de chaque section.
+        // Une clé vide côté WordPress laisse le contenu d'origine en place.
+        const content = cfg.content || {};
+
+        document.querySelectorAll<HTMLElement>("[data-ff-content]").forEach((el) => {
+          const value = content[el.dataset.ffContent!];
+          if (!value) return;
+          // Les retours à la ligne sont conservés visuellement
+          if (String(value).includes("\n")) {
+            el.innerHTML = String(value)
+              .split("\n")
+              .map((line) => line.replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" })[c]!))
+              .join("<br>");
+          } else {
+            el.textContent = String(value);
+          }
+        });
+
+        document.querySelectorAll<HTMLImageElement>("[data-ff-img]").forEach((el) => {
+          const value = content[el.dataset.ffImg!];
+          if (value) el.src = String(value);
         });
       };
 

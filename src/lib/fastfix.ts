@@ -22,6 +22,8 @@ export interface SiteConfig {
   promises: string[];
   reviews: { name: string; text: string; stars: number; device: string; date: string }[];
   faq: { q: string; a: string }[];
+  /** Contenus des pages, indexés par clé « page.section.champ ». */
+  content: Record<string, string>;
 }
 
 /**
@@ -64,4 +66,56 @@ export function useSiteConfig(): SiteConfig | null {
   }, []);
 
   return config;
+}
+
+/* ─── Catalogue d'appareils (photos), mis en cache pour la visite ─── */
+
+export interface RemoteDeviceSummary {
+  id: number;
+  name: string;
+  image: string;
+  deviceType: string;
+}
+
+let devicesCache: RemoteDeviceSummary[] | null = null;
+let devicesPromise: Promise<RemoteDeviceSummary[]> | null = null;
+
+export function fetchDevices(): Promise<RemoteDeviceSummary[]> {
+  if (devicesCache) return Promise.resolve(devicesCache);
+  if (!devicesPromise) {
+    devicesPromise = fetch(`${FASTFIX_API_URL}/devices`)
+      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+      .then((list: RemoteDeviceSummary[]) => {
+        devicesCache = Array.isArray(list) ? list : [];
+        return devicesCache;
+      });
+  }
+  return devicesPromise;
+}
+
+/**
+ * Associe un nom de modèle à sa photo, en piochant d'abord dans le catalogue
+ * WordPress (photos uploadées), puis dans les images livrées avec le site.
+ */
+export function useDeviceImages(): (name: string, fallback?: string) => string | undefined {
+  const [map, setMap] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchDevices()
+      .then((list) => {
+        if (cancelled) return;
+        const next: Record<string, string> = {};
+        list.forEach((d) => {
+          if (d.image) next[d.name.toLowerCase()] = d.image;
+        });
+        setMap(next);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return (name: string, fallback?: string) => map[name?.toLowerCase()] ?? fallback;
 }

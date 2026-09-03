@@ -8,7 +8,23 @@ interface RemoteDevice {
   image: string;
   featured: boolean;
   startingPrice: number | null;
+  deviceType: string;
 }
+
+// Repli par famille : un appareil sans photo dans WordPress garde une image
+// cohérente avec ce qu'il est, plutôt qu'une image générique unique.
+const TYPE_IMAGES: Record<string, string> = {
+  iphone: "/images/devices/iphone-16.webp",
+  ipad: "/images/devices/ipad-pro.webp",
+  "apple-watch": "/images/devices/apple-watch.webp",
+  macbook: "/images/devices/macbook-air.webp",
+  "galaxy-s": "/images/devices/galaxy-s26-ultra.webp",
+  "galaxy-a": "/images/devices/galaxy-s24.webp",
+  "galaxy-tab": "/images/devices/galaxy-tab.webp",
+  "galaxy-z": "/images/devices/galaxy-s24.webp",
+  pixel: "/images/devices/pixel-10-pro.webp",
+  "pixel-tablet": "/images/devices/pixel-10-pro.webp",
+};
 
 interface PopularDevice {
   name: string;
@@ -43,7 +59,13 @@ export default function PopularDevices() {
           setDevices(
             featured.map((d) => ({
               name: d.name,
-              img: d.image || "/images/devices/iphone-16.webp",
+              // 1) photo WordPress, 2) image d'origine du même modèle,
+              // 3) image représentative de la famille
+              img:
+                d.image ||
+                fallbackDevices.find((f) => f.name === d.name)?.img ||
+                TYPE_IMAGES[d.deviceType] ||
+                "/images/devices/iphone-16.webp",
               price: d.startingPrice != null ? String(d.startingPrice) : "—",
             }))
           );
