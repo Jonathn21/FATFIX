@@ -72,10 +72,10 @@ body {
  * en se mélangeant à la photo et écrasait la lisibilité du texte.
  */
 .gradient-hero {
-  background:
-    radial-gradient(ellipse 70% 80% at 76% 46%, rgba(247, 232, 65, 0.22) 0%, rgba(247, 232, 65, 0.06) 45%, transparent 72%),
-    radial-gradient(ellipse 90% 60% at 50% 120%, rgba(212, 160, 23, 0.10) 0%, transparent 60%),
-    var(--color-ink);
+  /* Un simple noir profond. Un halo jaune, même discret, se mélange au noir
+     en olive et se lit comme une photo de fond restée en place : on préfère
+     laisser le produit porter seul la lumière. */
+  background: var(--color-ink);
 }
 
 .gradient-footer {

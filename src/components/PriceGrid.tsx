@@ -65,7 +65,7 @@ export default function PriceGrid({ fallback, images }: Props) {
               const prices = PRICE_LABELS.filter((p) => row[p.key] && row[p.key].trim() !== "");
 
               return (
-                <div key={model} className="card overflow-hidden">
+                <div key={model} className="card overflow-hidden flex flex-col">
                   <div className="bg-white p-4 flex items-center justify-center h-36">
                     <img
                       src={deviceImage(model, images[model] ?? GENERIC_IMAGE)}
@@ -74,7 +74,7 @@ export default function PriceGrid({ fallback, images }: Props) {
                       loading="lazy"
                     />
                   </div>
-                  <div className="p-4 bg-bg-alt border-t border-border">
+                  <div className="p-4 bg-bg-alt border-t border-border flex-1">
                     <h4 className="font-display font-bold text-sm mb-3">{model}</h4>
                     <div className="space-y-2 text-xs">
                       {prices.map((p) => (
