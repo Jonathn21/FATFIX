@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { useSiteConfig } from "../lib/fastfix";
 
-const faqs = [
+// Questions affichées tant que les données WordPress ne sont pas chargées,
+// et si l'API est injoignable.
+const fallbackFaqs = [
   {
     q: "Combien de temps dure une réparation ?",
     a: "La plupart des réparations de smartphones (écran, batterie) sont terminées en 60 minutes maximum. Pour les MacBooks et tablettes, le délai dépend de la réparation — chaque fiche indique le temps estimé.",
@@ -29,6 +32,10 @@ const faqs = [
 
 export default function FAQ() {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
+  const config = useSiteConfig();
+
+  // Questions éditables dans wp-admin → FastFix → FAQ.
+  const faqs = config?.faq?.length ? config.faq : fallbackFaqs;
 
   return (
     <div className="space-y-3">
@@ -52,7 +59,7 @@ export default function FAQ() {
             </button>
             <div
               className="overflow-hidden transition-all duration-300"
-              style={{ maxHeight: isOpen ? "200px" : "0px", opacity: isOpen ? 1 : 0 }}
+              style={{ maxHeight: isOpen ? "600px" : "0px", opacity: isOpen ? 1 : 0 }}
             >
               <p className="px-6 pb-5 text-sm leading-relaxed text-text-muted">
                 {faq.a}

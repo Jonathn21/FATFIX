@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSiteConfig } from "../lib/fastfix";
 
 const links = [
   { label: "Réparations", href: "/reparations" },
@@ -12,6 +13,19 @@ const links = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const config = useSiteConfig();
+
+  // Valeurs par défaut affichées tant que les réglages WordPress ne sont pas
+  // chargés (et si l'API est injoignable).
+  const phone = config?.contact.phone ?? "02 219 49 16";
+  const phoneLink = `tel:${config?.contact.phoneLink ?? "+3222194916"}`;
+  const rating = config?.stats.googleRating ?? "4,9";
+  const reviewsCount = config?.stats.googleReviews ?? "2 000+";
+  const promises = config?.promises ?? [
+    "Jusqu'à 1 an de garantie",
+    "Prêt en 60 min",
+    "Joignable 7j/7",
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -38,31 +52,31 @@ export default function Navbar() {
                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
               </svg>
-              <span className="font-semibold">4,9</span>
-              <span className="text-text-muted">· 2 000+ avis Google</span>
+              <span className="font-semibold">{rating}</span>
+              <span className="text-text-muted">· {reviewsCount} avis Google</span>
             </span>
-            <span className="text-border">·</span>
-            <span className="flex items-center gap-1.5 text-text-light">
-              <svg className="h-3.5 w-3.5 text-primary" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
-              </svg>
-              Jusqu'à 1 an de garantie
-            </span>
-            <span className="text-border">·</span>
-            <span className="flex items-center gap-1.5 text-text-light">
-              <svg className="h-3.5 w-3.5 text-primary" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-              Prêt en 60 min
-            </span>
-            <span className="text-border">·</span>
-            <span className="text-text-light">Joignable 7j/7</span>
+            {promises.map((promise, i) => (
+              <span key={promise} className="flex items-center gap-1.5 text-text-light">
+                <span className="text-border mr-3.5">·</span>
+                {i === 0 && (
+                  <svg className="h-3.5 w-3.5 text-primary" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+                  </svg>
+                )}
+                {i === 1 && (
+                  <svg className="h-3.5 w-3.5 text-primary" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                )}
+                {promise}
+              </span>
+            ))}
           </div>
-          <a href="tel:+3222194916" className="text-text-light hover:text-primary transition-colors flex items-center gap-1.5 font-medium">
+          <a href={phoneLink} className="text-text-light hover:text-primary transition-colors flex items-center gap-1.5 font-medium">
             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
             </svg>
-            +32 02 219 49 16
+            {phone}
           </a>
         </div>
       </div>
@@ -90,7 +104,7 @@ export default function Navbar() {
 
           <div className="hidden lg:flex items-center gap-3">
             <a
-              href="tel:+3222194916"
+              href={phoneLink}
               className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-white/10 transition-colors text-white/70 hover:text-primary"
               aria-label="Appeler"
             >

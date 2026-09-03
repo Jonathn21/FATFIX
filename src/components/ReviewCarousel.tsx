@@ -1,6 +1,9 @@
 import { useRef, useEffect, useState } from "react";
+import { useSiteConfig } from "../lib/fastfix";
 
-const reviews = [
+// Avis affichés tant que les données WordPress ne sont pas chargées,
+// et si l'API est injoignable.
+const fallbackReviews = [
   {
     name: "Sophie M.",
     date: "28 août 2026",
@@ -70,6 +73,10 @@ function Stars({ count }: { count: number }) {
 export default function ReviewCarousel() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
+  const config = useSiteConfig();
+
+  // Avis éditables dans wp-admin → FastFix → Avis clients.
+  const reviews = config?.reviews?.length ? config.reviews : fallbackReviews;
 
   useEffect(() => {
     const el = scrollRef.current;

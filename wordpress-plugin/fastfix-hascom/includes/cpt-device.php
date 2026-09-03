@@ -179,7 +179,9 @@ add_action( 'save_post_fastfix_device', function( $post_id ) {
 	if ( isset( $_POST['fastfix_model_numbers'] ) ) {
 		update_post_meta( $post_id, '_fastfix_model_numbers', sanitize_text_field( $_POST['fastfix_model_numbers'] ) );
 	}
-	update_post_meta( $post_id, '_fastfix_featured', isset( $_POST['fastfix_featured'] ) ? '1' : '' );
+	// '0' (et non '') pour distinguer "décoché volontairement" de "jamais configuré",
+	// afin que la migration ne recoche pas un appareil que vous avez retiré.
+	update_post_meta( $post_id, '_fastfix_featured', isset( $_POST['fastfix_featured'] ) ? '1' : '0' );
 	if ( isset( $_POST['fastfix_starting_price'] ) ) {
 		update_post_meta( $post_id, '_fastfix_starting_price', sanitize_text_field( $_POST['fastfix_starting_price'] ) );
 	}

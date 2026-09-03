@@ -51,7 +51,126 @@ add_action( 'rest_api_init', function() {
 		'callback'            => 'fastfix_get_featured_repairs',
 		'permission_callback' => '__return_true',
 	] );
+
+	register_rest_route( 'fastfix/v1', '/reviews', [
+		'methods'             => 'GET',
+		'callback'            => 'fastfix_get_reviews_list',
+		'permission_callback' => '__return_true',
+	] );
+
+	register_rest_route( 'fastfix/v1', '/faq', [
+		'methods'             => 'GET',
+		'callback'            => 'fastfix_get_faq_list',
+		'permission_callback' => '__return_true',
+	] );
+
+	register_rest_route( 'fastfix/v1', '/config', [
+		'methods'             => 'GET',
+		'callback'            => 'fastfix_get_site_config',
+		'permission_callback' => '__return_true',
+	] );
 } );
+
+/**
+ * Réglages du site + avis + FAQ en une seule requête : le frontend n'a
+ * besoin que de celle-ci pour afficher coordonnées, horaires, avis et FAQ.
+ */
+function fastfix_get_site_config() {
+	$s      = fastfix_get_settings();
+	$status = fastfix_open_status();
+
+	$socials = [];
+	foreach ( [ 'facebook', 'instagram', 'linkedin', 'tiktok' ] as $network ) {
+		if ( ! empty( $s[ $network ] ) ) $socials[ $network ] = $s[ $network ];
+	}
+
+	return rest_ensure_response( [
+		'business' => [
+			'name'      => $s['business_name'],
+			'tagline'   => $s['tagline'],
+			'legalName' => $s['legal_name'],
+			'intro'     => $s['intro'],
+		],
+		'contact' => [
+			'phone'     => $s['phone'],
+			'phoneLink' => $s['phone_link'],
+			'whatsapp'  => $s['whatsapp'],
+			'email'     => $s['email'],
+		],
+		'address' => [
+			'street'     => $s['address'],
+			'postalCode' => $s['postal_code'],
+			'city'       => $s['city'],
+			'full'       => trim( $s['address'] . ', ' . $s['postal_code'] . ' ' . $s['city'] ),
+			'mapsUrl'    => $s['maps_url'],
+		],
+		'hours' => [
+			'days'     => $s['hours'],
+			'summary'  => fastfix_hours_summary(),
+			'isOpen'   => $status['open'],
+			'status'   => $status['label'],
+		],
+		'socials' => $socials,
+		'stats' => [
+			'googleRating'  => $s['google_rating'],
+			'googleReviews' => $s['google_reviews'],
+			'repairsCount'  => $s['repairs_count'],
+			'sinceYear'     => $s['since_year'],
+		],
+		'promises' => array_values( array_filter( [ $s['promise_1'], $s['promise_2'], $s['promise_3'] ] ) ),
+		'reviews'  => fastfix_get_reviews_data(),
+		'faq'      => fastfix_get_faq_data(),
+	] );
+}
+
+function fastfix_get_reviews_data() {
+	$posts   = get_posts( [
+		'post_type'      => 'fastfix_review',
+		'post_status'    => 'publish',
+		'posts_per_page' => -1,
+		'orderby'        => 'menu_order',
+		'order'          => 'ASC',
+	] );
+
+	$reviews = [];
+	foreach ( $posts as $post ) {
+		$reviews[] = [
+			'name'   => $post->post_title,
+			'text'   => wp_strip_all_tags( $post->post_content ),
+			'stars'  => (int) ( get_post_meta( $post->ID, '_fastfix_stars', true ) ?: 5 ),
+			'device' => get_post_meta( $post->ID, '_fastfix_review_device', true ),
+			'date'   => get_post_meta( $post->ID, '_fastfix_review_date', true ) ?: get_the_date( 'j F Y', $post ),
+		];
+	}
+	return $reviews;
+}
+
+function fastfix_get_reviews_list() {
+	return rest_ensure_response( fastfix_get_reviews_data() );
+}
+
+function fastfix_get_faq_data() {
+	$posts = get_posts( [
+		'post_type'      => 'fastfix_faq',
+		'post_status'    => 'publish',
+		'posts_per_page' => -1,
+		'orderby'        => 'menu_order',
+		'order'          => 'ASC',
+	] );
+
+	$faq = [];
+	foreach ( $posts as $post ) {
+		$faq[] = [
+			'q' => $post->post_title,
+			'a' => wp_strip_all_tags( $post->post_content ),
+		];
+	}
+	return $faq;
+}
+
+function fastfix_get_faq_list() {
+	return rest_ensure_response( fastfix_get_faq_data() );
+}
 
 /**
  * Liste plate des réparations marquées "populaire", pour la section
@@ -294,7 +413,7 @@ add_filter( 'rest_pre_serve_request', function( $value, $result, $request ) {
 		return $value;
 	}
 
-	$origins_setting = get_option( 'fastfix_cors_origins', '*' );
+	$origins_setting = fastfix_get_setting( 'cors_origins', '*' );
 	$origin          = get_http_origin();
 
 	if ( $origins_setting === '*' ) {
@@ -424,7 +543,7 @@ function fastfix_handle_booking_submission( WP_REST_Request $request ) {
 	$reference = 'FF-' . str_pad( $post_id, 5, '0', STR_PAD_LEFT );
 	update_post_meta( $post_id, '_fastfix_reference', $reference );
 
-	$to      = get_option( 'fastfix_notify_email', get_option( 'admin_email' ) );
+	$to      = fastfix_get_setting( 'notify_email' ) ?: get_option( 'admin_email' );
 	$subject = 'Nouvelle demande de RDV FastFix — ' . $reference;
 	$body    = "Nouvelle demande de rendez-vous reçue sur fastfix.be\n\n"
 		. "Référence : $reference\n"

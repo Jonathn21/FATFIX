@@ -279,7 +279,9 @@ add_action( 'save_post_fastfix_repair', function( $post_id ) {
 			update_post_meta( $post_id, '_' . $field, call_user_func( $sanitizer, $_POST[ $field ] ) );
 		}
 	}
-	update_post_meta( $post_id, '_fastfix_featured', isset( $_POST['fastfix_featured'] ) ? '1' : '' );
+	// '0' (et non '') pour distinguer "décoché volontairement" de "jamais configuré",
+	// afin que la migration ne recoche pas une réparation que vous avez retirée.
+	update_post_meta( $post_id, '_fastfix_featured', isset( $_POST['fastfix_featured'] ) ? '1' : '0' );
 } );
 
 /**

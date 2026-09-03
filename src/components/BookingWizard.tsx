@@ -1,9 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 
 /* ─── API ─── */
-// URL du backend WordPress (plugin "FastFix — Hascom"). À remplacer par
-// https://fastfix.be/wp-json/fastfix/v1 une fois le domaine final branché.
-const FASTFIX_API_URL = "https://ahmedc12.sg-host.com/wp-json/fastfix/v1";
+import { FASTFIX_API_URL } from "../lib/fastfix";
 
 /* ─── DATA ─── */
 const brands = [
