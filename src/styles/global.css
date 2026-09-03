@@ -72,10 +72,11 @@ body {
  * en se mélangeant à la photo et écrasait la lisibilité du texte.
  */
 .gradient-hero {
-  /* Noir profond : c'est la photo d'atelier posée par-dessus (opacity 10,
-     mix-blend-overlay) qui donne la texture du fond. Pas de halo ici, il
-     passerait devant l'image et devant les produits. */
-  background: var(--color-ink);
+  /* Noir profond texturé par la photo d'atelier, avec le halo jaune derrière
+     le produit : la lumière de l'atelier posée sur les appareils. */
+  background:
+    radial-gradient(ellipse 55% 65% at 72% 45%, rgba(247, 232, 65, 0.22) 0%, transparent 60%),
+    var(--color-ink);
 }
 
 .gradient-footer {
